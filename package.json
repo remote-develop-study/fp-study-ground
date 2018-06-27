@@ -2,7 +2,8 @@
 	"name": "fp-study-ground",
 	"version": "1.0.0",
 	"scripts": {
-		"precommit": "lint-staged"
+		"precommit": "lint-staged",
+		"db": ""
 	},
 	"lint-staged": {
 		"*.js": [
