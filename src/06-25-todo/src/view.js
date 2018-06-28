@@ -15,7 +15,7 @@ export default class View {
 		this.$.TODO_LIST.innerHTML = $tmpl.join("");
 	}
 
-	appendTodo({ id, content }) {
+  addTodo({ id, content }) {
 		const $li = document.createElement("li");
 		$li.setAttribute("id", id);
 
@@ -25,5 +25,9 @@ export default class View {
         </li>`;
 
 		this.$.TODO_LIST.appendChild($li);
-	}
+  }
+  
+  removeTodo(node) {
+    this.$.TODO_LIST.removeChild(node);
+  }
 }

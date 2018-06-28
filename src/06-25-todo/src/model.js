@@ -7,8 +7,11 @@ export default class Model {
 		this.todoList = todoList;
 	}
 
-	setTodo(newTodo) {
+  addTodo(newTodo) {
 		this.todoList.push(newTodo);
-		console.log(this.todoList);
-	}
+  }
+  
+  removeTodo(id) {
+    this.todoList.splice(id, 1);
+  }
 }

@@ -24,9 +24,9 @@ export default class Controller {
 	}
 
 	addTodo({ target, keyCode }) {
-		if (keyCode !== 13) return;
+    if (keyCode !== 13 || !target.value) return;
+    
 		const _ = this;
-
 		const id = _.model.getTodoList().length;
 		const newTodo = {
 			id,
@@ -34,10 +34,18 @@ export default class Controller {
 			complete: false
 		};
 
-		_.model.setTodo(newTodo);
-		_.view.appendTodo(newTodo);
+		_.model.addTodo(newTodo);
+    _.view.addTodo(newTodo);
 		target.value = "";
 	}
 
-	deleteTodo() {}
+  removeTodo(target) {
+    const { classList, parentNode } = target;
+    if (classList.value !== 'destroy') return;
+    const _ = this;
+    const id = parentNode.id;
+
+    _.model.removeTodo(id);
+    _.view.removeTodo(parentNode);
+  }
 }
