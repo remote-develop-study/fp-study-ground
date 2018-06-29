@@ -13,9 +13,12 @@ window.onload = function() {
 };
 
 $.TEXT_INPUT.addEventListener("keyup", function(e) {
-  controller.addTodo(e);
+	controller.addTodo(e);
 });
 
 $.TODO_LIST.addEventListener("click", function({ target }) {
-  controller.removeTodo(target);
+	controller.removeTodo(target);
 });
+
+// TODO: 편집 - 더블클릭
+// TODO: 체크박스 - 상태변경

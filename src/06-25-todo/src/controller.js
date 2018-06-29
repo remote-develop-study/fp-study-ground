@@ -24,28 +24,43 @@ export default class Controller {
 	}
 
 	addTodo({ target, keyCode }) {
-    if (keyCode !== 13 || !target.value) return;
-    
+		if (keyCode !== 13 || !target.value) return;
+
 		const _ = this;
 		const id = _.model.getTodoList().length;
-		const newTodo = {
-			id,
-			content: target.value,
-			complete: false
-		};
+		const newTodo = { id, content: target.value, complete: false };
 
 		_.model.addTodo(newTodo);
-    _.view.addTodo(newTodo);
+		_.view.addTodo(newTodo);
+
+		// TODO: 재사용
 		target.value = "";
 	}
 
-  removeTodo(target) {
-    const { classList, parentNode } = target;
-    if (classList.value !== 'destroy') return;
-    const _ = this;
-    const id = parentNode.id;
+	removeTodo(target) {
+		const { classList, parentNode } = target;
+		if (classList.value !== "destroy") return;
+		const _ = this;
+		const id = parentNode.id;
 
-    _.model.removeTodo(id);
-    _.view.removeTodo(parentNode);
-  }
+		_.model.removeTodo(id);
+		_.view.removeTodo(parentNode);
+	}
+
+	updateTodo(id, newContent) {
+		_.model.updateTodo(id, newContent);
+		_.view.updateTodo(id, newContent);
+
+		// TODO: 재사용
+		target.value = "";
+	}
+
+	// TODO: 필터링 렌더링
+	toggleTodoState(id) {
+		_.model.toggleTodoState(id);
+		_.view.toggleTodoState(id);
+	}
+
+	// TODO: 필터링
+	// Completed & Active & All
 }
