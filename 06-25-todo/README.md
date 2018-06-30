@@ -1,8 +1,6 @@
-# 함수형 프로그래밍
+# Todo
 
-## Todo
-
-### 요구사항
+## 요구사항
 
 > 출처: [부스트캠프 2기 웹 선발 과제](https://github.com/connect-boostcamp/todolist)
 
