@@ -127,7 +127,8 @@ label[for='toggle-all'] {
   width: 60px;
   height: 34px;
   text-align: center;
-  border: none; /* Mobile Safari */
+  border: none;
+  /* Mobile Safari */
 }
 
 .toggle-all:before {
@@ -182,7 +183,8 @@ label[for='toggle-all'] {
   top: 0;
   bottom: 0;
   margin: auto 0;
-  border: none; /* Mobile Safari */
+  border: none;
+  /* Mobile Safari */
   -webkit-appearance: none;
   appearance: none;
 }
@@ -245,6 +247,34 @@ label[for='toggle-all'] {
   margin-bottom: -1px;
 }
 
+.todo-list li .delete {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 10px;
+  bottom: 0;
+  width: 40px;
+  height: 40px;
+  margin: auto 0;
+  font-size: 30px;
+  color: #cc9a9a;
+  margin-bottom: 11px;
+  transition: color 0.2s ease-out;
+}
+
+.todo-list li .delete:hover {
+  color: #af5b5e;
+}
+
+.todo-list li .delete:after {
+  content: '×';
+}
+
+.todo-list li:hover .delete {
+  display: block;
+  cursor: pointer;
+}
+
 .footer {
   color: #777;
   padding: 10px 15px;
@@ -261,8 +291,7 @@ label[for='toggle-all'] {
   left: 0;
   height: 50px;
   overflow: hidden;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2), 0 8px 0 -3px #f6f6f6, 0 9px 1px -3px rgba(0, 0, 0, 0.2),
-    0 16px 0 -6px #f6f6f6, 0 17px 2px -6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2), 0 8px 0 -3px #f6f6f6, 0 9px 1px -3px rgba(0, 0, 0, 0.2), 0 16px 0 -6px #f6f6f6, 0 17px 2px -6px rgba(0, 0, 0, 0.2);
 }
 
 .todo-count {
@@ -285,6 +314,7 @@ label[for='toggle-all'] {
 
 .filters li {
   display: inline;
+  cursor: pointer;
 }
 
 .filters li a {
@@ -345,16 +375,15 @@ html .clear-completed:active {
 	Hack to remove background from Mobile Safari.
 	Can't use it globally since it destroys checkboxes in Firefox
 */
+
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   .toggle-all,
   .todo-list li .toggle {
     background: none;
   }
-
   .todo-list li .toggle {
     height: 40px;
   }
-
   .toggle-all {
     -webkit-transform: rotate(90deg);
     transform: rotate(90deg);
@@ -367,7 +396,6 @@ html .clear-completed:active {
   .footer {
     height: 50px;
   }
-
   .filters {
     bottom: 10px;
   }
