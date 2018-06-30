@@ -5,19 +5,19 @@ export default class View {
 
 	init(todo) {
 		const $tmpl = todo.map(item => {
-			return `<li id="${item.id}" class="${item.complete && "completed"}">
+			return `<li id="${item.id}" class="${item.complete && 'completed'}">
 	        <input class="toggle" type="checkbox">
 	        <label>${item.content}</label>
 	        <button class="destroy"></button>
         </li>`;
 		});
 
-		this.$.TODO_LIST.innerHTML = $tmpl.join("");
+		this.$.TODO_LIST.innerHTML = $tmpl.join('');
 	}
 
 	addTodo({ id, content }) {
-		const $li = document.createElement("li");
-		$li.setAttribute("id", id);
+		const $li = document.createElement('li');
+		$li.setAttribute('id', id);
 
 		$li.innerHTML = `<input class="toggle" type="checkbox">
 		      <label>${content}</label>
@@ -31,8 +31,26 @@ export default class View {
 		this.$.TODO_LIST.removeChild(node);
 	}
 
-	updateTodo(id, content) {
-		this.$.TODO_LIST.querySelector(`#${id}`).textContent = content;
+	showEditMode({ target: $label }) {
+		const { parentNode: $parentNode } = $label;
+		const $newInput = document.createElement('input');
+
+		$newInput.setAttribute('class', 'edit');
+		$newInput.value = $label.textContent;
+
+		$label.style.display = 'none';
+		$parentNode.classList.value = 'editing';
+		$parentNode.appendChild($newInput);
+		$newInput.focus();
+	}
+
+	hideEditMode(target, $label) {
+		const $newInput = target;
+		const $parentNode = target.parentNode;
+
+		$parentNode.removeAttribute('class');
+		$parentNode.removeChild($newInput);
+		$label.style.display = 'block';
 	}
 
 	toggleTodoState() {

@@ -1,5 +1,4 @@
 export const element = {
-	TODO_LIST: document.querySelector(".todo-list"),
-	TEXT_INPUT: document.querySelector(".new-todo"),
-	CLOSE_BTN: document.querySelector(".todo-list li .destroy")
+	TODO_LIST: document.querySelector('.todo-list'),
+	NEW_TEXT_INPUT: document.querySelector('.new-todo'),
 };

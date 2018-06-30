@@ -16,7 +16,7 @@ export default class Model {
 	}
 
 	updateTodo(id, newContent) {
-		this.todoList[i].content = newContent;
+		this.todoList[id].content = newContent;
 	}
 
 	toggleTodoState() {

@@ -1,4 +1,4 @@
-import fetchData from "./api.js";
+import fetchData from './api.js';
 
 export default class Controller {
 	constructor(view, model) {
@@ -13,14 +13,14 @@ export default class Controller {
 	}
 
 	async loadTodoData() {
-		const URL = "./db/data.json";
+		const URL = './db/data.json';
 
 		const result = await fetchData(URL);
-		this.mappingTodoData(result);
+		this.mappingTodoData(result.todo);
 	}
 
-	mappingTodoData(res) {
-		this.model.setTodoList(res.todo);
+	mappingTodoData(todo) {
+		this.model.setTodoList(todo);
 	}
 
 	addTodo({ target, keyCode }) {
@@ -34,12 +34,11 @@ export default class Controller {
 		_.view.addTodo(newTodo);
 
 		// TODO: 재사용
-		target.value = "";
+		target.value = '';
 	}
 
-	removeTodo(target) {
-		const { classList, parentNode } = target;
-		if (classList.value !== "destroy") return;
+	removeTodo({ classList, parentNode }) {
+		if (classList.value !== 'destroy') return;
 		const _ = this;
 		const id = parentNode.id;
 
@@ -47,12 +46,20 @@ export default class Controller {
 		_.view.removeTodo(parentNode);
 	}
 
-	updateTodo(id, newContent) {
-		_.model.updateTodo(id, newContent);
-		_.view.updateTodo(id, newContent);
+	showEditMode(e) {
+		this.view.showEditMode(e);
+	}
 
-		// TODO: 재사용
-		target.value = "";
+	updateTodo({ target, keyCode }) {
+		if (keyCode !== 13 || !target.value) return;
+		const _ = this;
+		const $parentNode = target.parentNode;
+		const id = $parentNode.id;
+		const $label = $parentNode.querySelector('label');
+
+		_.model.updateTodo(id, target.value);
+		$label.textContent = target.value;
+		_.view.hideEditMode(target, $label);
 	}
 
 	// TODO: 필터링 렌더링
