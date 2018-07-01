@@ -12,12 +12,27 @@
     <section class="todoapp">
       <header class="header">
         <h1>todos</h1>
-        <input class="new-todo" placeholder="What needs to be done?" autofocus>
+        <input id="todoWriteField" class="new-todo" placeholder="What needs to be done?" autofocus>
       </header>
       <section class="main">
         <input class="toggle-all" type="checkbox">
         <label for="toggle-all">Mark all as complete</label>
-        <ul class="todo-list"></ul>
+        <ul id="todoList" class="todo-list">
+            <!--<li>-->
+                <!--<div class="view">-->
+                    <!--<input class="toggle" type="checkbox">-->
+                    <!--<label>11111</label>-->
+                    <!--<button class="destroy"></button>-->
+                <!--</div>-->
+            <!--</li>-->
+            <!--<li>-->
+                <!--<div class="view">-->
+                    <!--<input class="toggle" type="checkbox">-->
+                    <!--<label>222222</label>-->
+                    <!--<button class="destroy"></button>-->
+                <!--</div>-->
+            <!--</li>-->
+        </ul>
       </section>
       <footer class="footer">
         <span class="todo-count"></span>
@@ -32,7 +47,7 @@
             <a href="#/completed">Completed</a>
           </li>
         </ul>
-        <button class="clear-completed">Clear completed</button>
+        <button id="clearCompleted" class="clear-completed">Clear completed</button>
       </footer>
     </section>
     <footer class="info">
@@ -42,5 +57,5 @@
       </p>
     </footer>
   </body>
-
+  <script type="text/javascript" src="static/js/app.js"></script>
 </html>
