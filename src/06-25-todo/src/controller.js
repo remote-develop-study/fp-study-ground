@@ -6,10 +6,21 @@ export default class Controller {
 		this.model = model;
 	}
 
+	// TODO: 내림차순으로 보여주기
+	// TODO: default All
 	async init() {
 		const _ = this;
+
 		await _.loadTodoData();
-		await _.view.init(_.model.getTodoList());
+		const todo = await _.model.getTodoList();
+		const getTodoLength = status => _.model.getTodoLength(status);
+		const isActiveCount = getTodoLength(false);
+		const isCompletedCount = getTodoLength(true);
+
+		await _.view.init(todo);
+		_.toggleFooter();
+		_.view.updateTodoCount(isActiveCount);
+		_.toggleClsCompleted();
 	}
 
 	async loadTodoData() {
@@ -23,27 +34,36 @@ export default class Controller {
 		this.model.setTodoList(todo);
 	}
 
-	addTodo({ target, keyCode }) {
-		if (keyCode !== 13 || !target.value) return;
-
+	addTodo(target) {
 		const _ = this;
-		const id = _.model.getTodoList().length;
-		const newTodo = { id, content: target.value, complete: false };
+		const todoList = _.model.getTodoList();
+		const [lastTodo] = todoList.slice(-1);
+		const id = todoList.length > 0 ? lastTodo.id + 1 : 0;
+		const newTodo = { id, content: target.value, completed: false };
 
 		_.model.addTodo(newTodo);
 		_.view.addTodo(newTodo);
+		_.toggleFooter();
 
-		// TODO: 재사용
+		const activeCount = _.model.getTodoLength(false);
+		_.view.updateTodoCount(activeCount);
+
 		target.value = '';
 	}
 
-	removeTodo({ classList, parentNode }) {
-		if (classList.value !== 'destroy') return;
+	removeTodo(target) {
 		const _ = this;
-		const id = parentNode.id;
+		const id = Number(target.id);
+		const todoList = _.model.getTodoList();
+		const targetIndex = todoList.findIndex(todo => todo.id === id);
 
-		_.model.removeTodo(id);
-		_.view.removeTodo(parentNode);
+		_.model.removeTodo(targetIndex);
+		_.view.removeTodo(target);
+		_.toggleFooter();
+
+		const activeCount = _.model.getTodoLength(false);
+		_.view.updateTodoCount(activeCount);
+		_.toggleClsCompleted();
 	}
 
 	showEditMode(e) {
@@ -54,20 +74,54 @@ export default class Controller {
 		if (keyCode !== 13 || !target.value) return;
 		const _ = this;
 		const $parentNode = target.parentNode;
-		const id = $parentNode.id;
+		const id = Number($parentNode.id);
+		const todoList = _.model.getTodoList();
+		const targetIndex = todoList.findIndex(todo => todo.id === id);
 		const $label = $parentNode.querySelector('label');
 
-		_.model.updateTodo(id, target.value);
+		_.model.updateTodo(targetIndex, target.value);
 		$label.textContent = target.value;
 		_.view.hideEditMode(target, $label);
 	}
 
-	// TODO: 필터링 렌더링
-	toggleTodoState(id) {
-		_.model.toggleTodoState(id);
-		_.view.toggleTodoState(id);
+	toggleState({ parentNode }) {
+		const _ = this;
+		const id = Number(parentNode.id);
+		const todoList = _.model.getTodoList();
+		const targetIndex = todoList.findIndex(todo => todo.id === id);
+
+		_.model.toggleState(targetIndex);
+		_.view.toggleState(parentNode, id);
+		const activeCount = _.model.getTodoLength(false);
+		_.view.updateTodoCount(activeCount);
+		_.toggleClsCompleted();
+	}
+
+	clearCompleted(completedTodo) {
+		[...completedTodo].map(ele => this.removeTodo(ele));
+	}
+
+	toggleFooter() {
+		const _ = this;
+		const isTodoList = !!_.model.getTodoLength() ? 'block' : 'none';
+
+		_.view.toggleFooter(isTodoList);
+	}
+
+	toggleClsCompleted() {
+		const _ = this;
+		const getTodoLength = status => _.model.getTodoLength(status);
+		const isCompletedCount = getTodoLength(true);
+
+		_.view.toggleClsCompleted(isCompletedCount >= 1 ? 'block' : 'none');
 	}
 
 	// TODO: 필터링
-	// Completed & Active & All
+	changeFilter(params) {
+		// params: Completed & Active & All
+		// default All
+	}
+
+	// TODO: 전체 투두 토글
+	toggleAll() {}
 }
