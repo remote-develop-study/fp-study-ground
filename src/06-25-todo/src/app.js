@@ -1,6 +1,7 @@
 import Controller from './controller.js';
 import Model from './model.js';
 import View from './view.js';
+// TODO: import 방법 어색함
 import { element } from './element.js';
 
 const model = new Model();
@@ -12,6 +13,7 @@ window.onload = function() {
 	controller.init();
 };
 
+// TODO: 이벤트 처리 공통화 또는 분리....
 $.NEW_TEXT_INPUT.addEventListener('keyup', function({ target, keyCode }) {
 	if (keyCode !== 13 || !target.value) return;
 	controller.addTodo(target);

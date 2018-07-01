@@ -4,12 +4,14 @@ export default class View {
 	}
 
 	init(todo) {
+		// TODO: 템플릿 리터럴로 교체
 		todo.map(item => {
 			const $li = document.createElement('li');
 			const $checkBox = document.createElement('input');
 			const $label = document.createElement('label');
 			const $closeBtn = document.createElement('button');
 
+			// TODO: data-id로 바꾸기
 			$li.setAttribute('id', item.id);
 			$checkBox.setAttribute('type', 'checkbox');
 
@@ -73,6 +75,7 @@ export default class View {
 	}
 
 	updateTodoCount(count) {
+		// TODO: item & items 처리
 		this.$.TODO_COUNT.textContent = `${count} item left`;
 	}
 
