@@ -12,12 +12,19 @@ window.onload = function() {
 	controller.init();
 };
 
-$.NEW_TEXT_INPUT.addEventListener('keyup', function(e) {
-	controller.addTodo(e);
+$.NEW_TEXT_INPUT.addEventListener('keyup', function({ target, keyCode }) {
+	if (keyCode !== 13 || !target.value) return;
+	controller.addTodo(target);
 });
 
 $.TODO_LIST.addEventListener('click', function({ target }) {
-	controller.removeTodo(target);
+	if (target.classList.value === 'destroy') {
+		controller.removeTodo(target.parentNode);
+	}
+
+	if (target.classList.value === 'toggle') {
+		controller.toggleState(target);
+	}
 });
 
 $.TODO_LIST.addEventListener('dblclick', async function(e) {
@@ -29,4 +36,8 @@ $.TODO_LIST.addEventListener('dblclick', async function(e) {
 	});
 });
 
-// TODO: 체크박스 - 상태변경
+$.CLS_COMPLETED.addEventListener('click', function() {
+	const $completedTodoItem = $.TODO_LIST.querySelectorAll('.completed');
+
+	controller.clearCompleted($completedTodoItem);
+});

@@ -4,15 +4,34 @@ export default class View {
 	}
 
 	init(todo) {
-		const $tmpl = todo.map(item => {
-			return `<li id="${item.id}" class="${item.complete && 'completed'}">
-	        <input class="toggle" type="checkbox">
-	        <label>${item.content}</label>
-	        <button class="destroy"></button>
-        </li>`;
-		});
+		todo.map(item => {
+			const $li = document.createElement('li');
+			const $checkBox = document.createElement('input');
+			const $label = document.createElement('label');
+			const $closeBtn = document.createElement('button');
 
-		this.$.TODO_LIST.innerHTML = $tmpl.join('');
+			$li.setAttribute('id', item.id);
+			$checkBox.setAttribute('type', 'checkbox');
+
+			$checkBox.classList.add('toggle');
+			$closeBtn.classList.add('destroy');
+			$label.textContent = item.content;
+
+			if (item.completed) {
+				$li.classList.add('completed');
+				$checkBox.checked = true;
+			}
+
+			$li.appendChild($checkBox);
+			$li.appendChild($label);
+			$li.appendChild($closeBtn);
+
+			this.$.TODO_LIST.appendChild($li);
+		});
+	}
+
+	toggleFooter(status) {
+		this.$.FOOTER.style.display = status;
 	}
 
 	addTodo({ id, content }) {
@@ -53,8 +72,15 @@ export default class View {
 		$label.style.display = 'block';
 	}
 
-	toggleTodoState() {
-		// TODO: 체크박스 & 취소선(클래스 토글)
-		this.$.TODO_LIST.querySelector(`#${id}`).classList;
+	updateTodoCount(count) {
+		this.$.TODO_COUNT.textContent = `${count} item left`;
+	}
+
+	toggleState($parentNode) {
+		$parentNode.classList.toggle('completed');
+	}
+
+	toggleClsCompleted(status) {
+		this.$.CLS_COMPLETED.style.display = status;
 	}
 }

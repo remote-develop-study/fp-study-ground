@@ -3,12 +3,12 @@
 		{
 			"id": 0,
 			"content": "안녕하세요",
-			"complete": true
+			"completed": true
 		},
 		{
 			"id": 1,
 			"content": "반갑습니다",
-			"complete": false
+			"completed": false
 		}
 	]
 }
