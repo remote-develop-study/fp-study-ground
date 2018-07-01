@@ -26,8 +26,7 @@ import state from './state.js'
 			.map(todoDOM)
 			.join('')
 		$('.todo-count').innerHTML = `
-		<strong>${state.todos.filter(todo => !todo.done).length}</strong> items left
-		`
+		<strong>${state.todos.filter(todo => !todo.done).length}</strong> items left`
 	}
 
 	const addPropertyReactiveness = () => {
