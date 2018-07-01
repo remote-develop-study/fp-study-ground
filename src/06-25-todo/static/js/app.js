@@ -72,23 +72,10 @@ const modifyTodo = (e) => {
   });
 };
 
-
-
-// const modifyComplete = (e) => {
-//   const item = document.getElementsByClassName('edit');
-//   const editingList = document.getElementById('editing');
-//   console.log(editingList);
-//   console.log(item);
-//
-//   // editingList.childNodes
-// };
-
-
 const deleteCompleteTodo = (e) => {
   console.log(list.querySelectorAll('li').classList.contains('completed'));
   list.removeChild(list.querySelectorAll('li').className('completed'));
 };
-
 
 writeField.addEventListener('keyup', (e) => {
   if (e.keyCode === 13) {
