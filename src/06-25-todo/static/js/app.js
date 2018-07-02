@@ -31,7 +31,7 @@ import state from './state.js'
 		<strong>${state.todos.filter(todo => !todo.done).length}</strong> items left`
   }
 
-  const addPropertyReactiveness = () => {
+  const addPropertyReactiveness = (() => {
     Object.defineProperties(state, {
       todos: {
         set(v) {
@@ -53,9 +53,9 @@ import state from './state.js'
         }
       }
     })
-  }
+  })()
 
-  const bindDOMEvents = () => {
+  const bindDOMEvents = (() => {
     $('.new-todo').addEventListener('keypress', e => {
       if (e.keyCode !== 13 || !e.target.value.trim()) return
       state.todos = [...state.todos, newTodo(e.target.value)]
@@ -77,11 +77,11 @@ import state from './state.js'
       if (e.target.classList.value === 'toggle') {
         state.todos = state.todos.map(
           todo =>
-          todo.id == e.target.dataset.id ? {
+          todo.id != e.target.dataset.id ?
+          todo : {
             ...todo,
             done: !todo.done
-          } :
-          todo
+          }
         )
       }
     })
@@ -93,9 +93,7 @@ import state from './state.js'
         done: !todo.done
       }))
     })
-  }
+  })()
 
-  bindDOMEvents()
-  addPropertyReactiveness()
   state.todos = localStorage._todos ? JSON.parse(localStorage._todos) : []
 })()
