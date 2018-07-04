@@ -1,5 +1,5 @@
 import $ from './selector.js'
-import state from './state.js'
+
 (() => {
   const todoDOM = todo => `
 	<li class="${todo.done && 'completed'}">
@@ -9,67 +9,46 @@ import state from './state.js'
 		<button data-id="${todo.id}" class="delete"/>
 	</li>`
 
-  const getCurrentId = () =>
+  const getCurrentId = state =>
     state.todos.length !== 0 ?
     Math.max(...state.todos.map(todo => todo.id)) + 1 :
     0
 
   const newTodo = title => ({
-    id: getCurrentId(),
+    id: getCurrentId(state),
     title,
     done: false
   })
 
-  const render = () => {
-    $('.todo-list').innerHTML = state.todos
+  const render = state => {
+    console.time('render')
+
+    const newTodos = state.todos
       .filter(todo => state.filter !== 'active' || !todo.done)
       .filter(todo => state.filter !== 'completed' || todo.done)
       .reverse()
       .map(todoDOM)
       .join('')
+
+    $('.todo-list').innerHTML = newTodos
     $('.todo-count').innerHTML = `
-		<strong>${state.todos.filter(todo => !todo.done).length}</strong> items left`
+    <strong>${state.todos.filter(todo => !todo.done).length}</strong> items left`
+
+    console.timeEnd('render')
   }
 
-  const addPropertyReactiveness = (() => {
-    Object.defineProperties(state, {
-      todos: {
-        set(v) {
-          state._todos = v
-          localStorage._todos = JSON.stringify(v)
-          render()
-        },
-        get() {
-          return state._todos
-        }
-      },
-      filter: {
-        set(v) {
-          state._filter = v
-          render()
-        },
-        get() {
-          return state._filter
-        }
-      }
-    })
-  })()
-
-  const bindDOMEvents = (() => {
+  const bindDOMEvents = state => {
     $('.new-todo').addEventListener('keypress', e => {
       if (e.keyCode !== 13 || !e.target.value.trim()) return
       state.todos = [...state.todos, newTodo(e.target.value)]
       e.target.value = ''
     })
-    $('ul.filters li a').map(DOM =>
-      DOM.addEventListener('click', e => {
-        state.filter = e.target.id
-        $('#all').classList.remove('selected')
-        $('#active').classList.remove('selected')
-        $('#completed').classList.remove('selected')
-        $(`#${e.target.id}`).classList.add('selected')
-      })
-    )
+    $('ul.filters').addEventListener('click', e => {
+      if (!e.target.id) return
+      state.filter = e.target.id
+      $('ul.filters li a').map(DOM => DOM.classList.remove('selected'))
+      $(`#${e.target.id}`).classList.add('selected')
+    })
     $('.todo-list').addEventListener('click', e => {
       if (e.target.classList.value === 'delete') {
         state.todos = state.todos.filter(todo => todo.id != e.target.dataset.id)
@@ -93,7 +72,27 @@ import state from './state.js'
         done: !todo.done
       }))
     })
-  })()
+  }
 
-  state.todos = localStorage._todos ? JSON.parse(localStorage._todos) : []
+  const state = {
+    set todos(v) {
+      state._todos = v
+      localStorage.todos = JSON.stringify(v)
+      render(state)
+    },
+    get todos() {
+      return state._todos
+    },
+    set filter(v) {
+      state._filter = v
+      render(state)
+    },
+    get filter() {
+      return state._filter
+    }
+  }
+
+  bindDOMEvents(state)
+
+  state.todos = localStorage.todos ? JSON.parse(localStorage.todos) : []
 })()
