@@ -67,8 +67,8 @@ const TodoApp = (() => {
     _todoCount() {
       const count = this[Private].todos.filter(v => v.status).length;
       return count == 0 || count == 1
-        ? "${count} item left"
-        : "${count} items left";
+        ? `${count} item left`
+        : `${count} items left`;
     }
   };
 })();
