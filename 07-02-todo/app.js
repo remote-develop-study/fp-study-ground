@@ -37,7 +37,9 @@ const TodoApp = (() => {
     }
 
     _create_todo_list() {
-      return this[Private].todos.map((v, i) => v.templatify(i)).join("");
+      return this[Private].todos
+        .map(({ content }, i) => this._templatify(content, i))
+        .join("");
     }
 
     _newTodoListen() {
@@ -51,6 +53,10 @@ const TodoApp = (() => {
           this._render();
         }
       });
+    }
+
+    _templatify(content, idx) {
+      return `<li data-key="${idx}"><input class="toggle" type="checkbox" /><label>${content}</label><button class="destroy"></button></li>`;
     }
 
     _mainDisplay() {
