@@ -5,38 +5,37 @@
   <meta charset="utf-8">
   <title>Vanilla ES6 • TodoMVC</title>
   <link rel="stylesheet" href="css/index.css">
-  <link rel="stylesheet" href="css/base.css">
 </head>
 
 <body>
-  <section class="todoapp">
-    <header class="header">
+  <section id="app">
+    <header id="header">
       <h1>todos</h1>
-      <input class="new-todo" placeholder="What needs to be done?" autofocus>
+      <input id="new-todo" placeholder="What needs to be done?" autofocus>
     </header>
 
-    <section style="display:none" class="main">
-      <input id="toggle-all" class="toggle-all" type="checkbox">
+    <section id="main" style="display:none;">
+      <input id="toggle-all" type="checkbox">
       <label for="toggle-all">Mark all as complete</label>
-      <ul class="todo-list"></ul>
-
-      <footer class="footer">
-        <span class="todo-count"></span>
-
-        <ul class="filters">
-          <li>
-            <a href="#/" class="selected">All</a>
-          </li>
-          <li>
-            <a href="#/active">Active</a>
-          </li>
-          <li>
-            <a href="#/completed">Completed</a>
-          </li>
-        </ul>
-        <button class="clear-completed">Clear completed</button>
-      </footer>
+      <ul id="todo-list"></ul>
     </section>
+
+    <footer id="footer">
+      <span id="todo-count"></span>
+
+      <ul id="filters">
+        <li>
+          <a href="#/" class="selected">All</a>
+        </li>
+        <li>
+          <a href="#/active">Active</a>
+        </li>
+        <li>
+          <a href="#/completed">Completed</a>
+        </li>
+      </ul>
+      <button id="clear-completed">Clear completed</button>
+    </footer>
   </section>
 
   <script type="module" src="./app.js"></script>
