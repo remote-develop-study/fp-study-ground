@@ -21,20 +21,14 @@ import $ from './selector.js'
   })
 
   const render = state => {
-    console.time('render')
-
-    const newTodos = [...state.todos]
+    $('.todo-list').innerHTML = [...state.todos]
       .filter(todo => state.filter !== 'active' || !todo.done)
       .filter(todo => state.filter !== 'completed' || todo.done)
       .reverse()
       .map(todoDOM)
       .join('')
-
-    $('.todo-list').innerHTML = newTodos
     $('.todo-count').innerHTML = `
     <strong>${state.todos.filter(todo => !todo.done).length}</strong> items left`
-
-    console.timeEnd('render')
   }
 
   const bindDOMEvents = state => {
