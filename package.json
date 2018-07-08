@@ -1,0 +1,21 @@
+{
+  "name": "fp-study-ground",
+  "version": "1.0.0",
+  "description": ">내용 정리예정",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://yuyuyul@github.com/yuyuyul/fp-study-ground.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yuyuyul/fp-study-ground/issues"
+  },
+  "homepage": "https://github.com/yuyuyul/fp-study-ground#readme"
+}
