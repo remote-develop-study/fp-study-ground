@@ -1,4 +1,4 @@
-import { $ } from "./tool.js";
+import { $, $$ } from "./tool.js";
 
 class Todo {
   constructor(content, id) {
@@ -34,14 +34,25 @@ const TodoApp = (() => {
 
     _render() {
       $("#todo-count").innerHTML = this._todoCount();
+      Array.from($$("#filters a")).forEach(v => v.classList.remove("selected"));
       if (this._mainDisplay())
-        $("#todo-list").innerHTML = this._create_todo_list();
+        $("#todo-list").innerHTML = this._generate_todo_list();
     }
 
-    _create_todo_list() {
-      // TODO: 필터링을 쿼리스트링으로 구분하되, render시 filter를 통해 구현할 수 있도록 해야 할 것
+    _generate_todo_list() {
+      const { todos } = this[Private];
+      const query = location.hash.slice(1) ? location.hash.slice(1) : "all";
+      let result;
+      this._check_filters(query);
+      if (query == "all") result = todos;
+      else if (query == "active") result = todos.filter(({ active }) => active);
+      else if (query == "completed")
+        result = todos.filter(({ active }) => !active);
+      return result.map(v => this._templatify(v)).join("");
+    }
 
-      return this[Private].todos.map(v => this._templatify(v)).join("");
+    _check_filters(query) {
+      $(`#filter-${query}`).classList.add("selected");
     }
 
     _newTodoListen() {
@@ -71,6 +82,11 @@ const TodoApp = (() => {
       });
     }
 
+    _hashListen() {
+      const _render = this._render.bind(this);
+      window.addEventListener("hashchange", _render);
+    }
+
     _deleteTodo() {
       $("#todo-list").addEventListener("click", ({ target }) => {
         if (target.classList.value != "destroy") return;
@@ -95,6 +111,7 @@ const TodoApp = (() => {
     _listListen() {
       this._toggleListen();
       this._deleteTodo();
+      this._hashListen();
     }
 
     _templatify({ content, id, active }) {
