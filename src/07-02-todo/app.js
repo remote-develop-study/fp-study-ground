@@ -87,13 +87,11 @@ const TodoApp = (() => {
       window.addEventListener("hashchange", _render);
     }
 
-    _deleteTodo() {
+    _deleteListen() {
       $("#todo-list").addEventListener("click", ({ target }) => {
         if (target.classList.value != "destroy") return;
         else {
-          const {
-            dataset: { id }
-          } = target.parentElement;
+          const { id } = target.parentElement.dataset;
           const { todos } = this[Private];
           const targetId = Number(id);
           const idx = todos.findIndex(({ id }) => id == targetId);
@@ -103,6 +101,20 @@ const TodoApp = (() => {
       });
     }
 
+    _toggleAllListen() {
+      $("#main > input").nextElementSibling.addEventListener(
+        "click",
+        ({ target: { htmlFor } }) => {
+          if (htmlFor != "toggle-all") return;
+          const { todos } = this[Private];
+          if (todos.every(({ active }) => !active)) {
+            todos.forEach(v => (v.active = true));
+          } else todos.forEach(v => (v.active = false));
+          this._save();
+        }
+      );
+    }
+
     _toggleActive(id) {
       const target = this[Private].todos.find(v => v.id == id);
       target.active = !target.active;
@@ -110,8 +122,9 @@ const TodoApp = (() => {
 
     _listListen() {
       this._toggleListen();
-      this._deleteTodo();
+      this._deleteListen();
       this._hashListen();
+      this._toggleAllListen();
     }
 
     _templatify({ content, id, active }) {
