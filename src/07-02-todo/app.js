@@ -8,7 +8,7 @@ class Todo {
 
 const TodoApp = (() => {
   const Private = Symbol();
-  let size = 0;
+  let idx = -1;
 
   return class {
     constructor(parent) {
@@ -18,11 +18,12 @@ const TodoApp = (() => {
 
     init(todos) {
       Object.assign(this[Private], { todos });
+      if (todos.length) idx = todos[todos.length - 1].id;
       const app = $(this[Private].parent);
       if (!app) throw "invalid parent";
       this._newTodoListen();
       this._listListen();
-      this._render();
+      if (todos.length) this._render();
     }
 
     _save() {
@@ -32,14 +33,9 @@ const TodoApp = (() => {
     }
 
     _render() {
-      const { todos } = this[Private];
-      if (!todos.length) return;
-      else {
-        this._mainDisplay();
-        const todo_list = this._create_todo_list();
-        $("#todo-list").innerHTML = todo_list;
-        $("#todo-count").innerHTML = this._todoCount();
-      }
+      $("#todo-count").innerHTML = this._todoCount();
+      if (this._mainDisplay())
+        $("#todo-list").innerHTML = this._create_todo_list();
     }
 
     _create_todo_list() {
@@ -53,10 +49,9 @@ const TodoApp = (() => {
       new_todo.addEventListener("keypress", ({ key, target: { value } }) => {
         if (key != "Enter" || value == "") return;
         else {
-          this[Private].todos.push(new Todo(value, size++));
-          this._save();
+          this[Private].todos.push(new Todo(value, ++idx));
           new_todo.value = "";
-          this._render();
+          this._save();
         }
       });
     }
@@ -67,26 +62,43 @@ const TodoApp = (() => {
         else {
           const {
             classList: parentClass,
-            dataset: { key }
+            dataset: { id }
           } = target.parentElement;
           parentClass.toggle("completed");
-          this._toggleActive(key);
+          this._toggleActive(Number(id));
           this._save();
         }
       });
     }
 
-    _toggleActive(key) {
-      const target = this[Private].todos[key];
+    _deleteTodo() {
+      $("#todo-list").addEventListener("click", ({ target }) => {
+        if (target.classList.value != "destroy") return;
+        else {
+          const {
+            dataset: { id }
+          } = target.parentElement;
+          const { todos } = this[Private];
+          const targetId = Number(id);
+          const idx = todos.findIndex(({ id }) => id == targetId);
+          todos.splice(idx, 1);
+          this._save();
+        }
+      });
+    }
+
+    _toggleActive(id) {
+      const target = this[Private].todos.find(v => v.id == id);
       target.active = !target.active;
     }
 
     _listListen() {
       this._toggleListen();
+      this._deleteTodo();
     }
 
     _templatify({ content, id, active }) {
-      return `<li data-key="${id}" class="${active ? "" : "completed"}">
+      return `<li data-id="${id}" class="${active ? "" : "completed"}">
           <input class="toggle" type="checkbox" ${active ? "" : "checked"} />
           <label>${content}</label>
           <button class="destroy">
@@ -95,7 +107,10 @@ const TodoApp = (() => {
 
     _mainDisplay() {
       const main = $("#main");
-      if (main.style.display == "none") main.style.display = "block";
+      this[Private].todos.length
+        ? (main.style.display = "block")
+        : main.style.display == "none";
+      return this[Private].todos.length;
     }
 
     _todoCount() {
