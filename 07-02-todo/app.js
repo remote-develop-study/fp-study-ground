@@ -1,4 +1,4 @@
-import { $, $$ } from "./tool.js";
+import { $ } from "./tool.js";
 import Todo from "./todo.js";
 
 const TodoApp = (() => {
@@ -13,10 +13,8 @@ const TodoApp = (() => {
 
     init(todos) {
       Object.assign(this[Private], { todos });
-
       const app = $(this[Private].parent);
       if (!app) throw "invalid parent";
-
       this._newTodoListen();
       this._render();
     }
@@ -39,6 +37,8 @@ const TodoApp = (() => {
     }
 
     _create_todo_list() {
+      // TODO: 필터링을 쿼리스트링으로 구분하되, render시 filter를 통해 구현할 수 있도록 해야 할 것
+
       return this[Private].todos
         .map(({ content, id }) => this._templatify(content, id))
         .join("");
