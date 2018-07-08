@@ -1,5 +1,10 @@
 import { $ } from "./tool.js";
-import Todo from "./todo.js";
+
+class Todo {
+  constructor(content, id) {
+    Object.assign(this, { content, id, active: true });
+  }
+}
 
 const TodoApp = (() => {
   const Private = Symbol();
@@ -16,6 +21,7 @@ const TodoApp = (() => {
       const app = $(this[Private].parent);
       if (!app) throw "invalid parent";
       this._newTodoListen();
+      this._listListen();
       this._render();
     }
 
@@ -39,9 +45,7 @@ const TodoApp = (() => {
     _create_todo_list() {
       // TODO: 필터링을 쿼리스트링으로 구분하되, render시 filter를 통해 구현할 수 있도록 해야 할 것
 
-      return this[Private].todos
-        .map(({ content, id }) => this._templatify(content, id))
-        .join("");
+      return this[Private].todos.map(v => this._templatify(v)).join("");
     }
 
     _newTodoListen() {
@@ -57,9 +61,33 @@ const TodoApp = (() => {
       });
     }
 
-    _templatify(content, id) {
-      return `<li data-key="${id}">
-          <input class="toggle" type="checkbox" />
+    _toggleListen() {
+      $("#todo-list").addEventListener("click", ({ target }) => {
+        if (target.classList.value != "toggle") return;
+        else {
+          const {
+            classList: parentClass,
+            dataset: { key }
+          } = target.parentElement;
+          parentClass.toggle("completed");
+          this._toggleActive(key);
+          this._save();
+        }
+      });
+    }
+
+    _toggleActive(key) {
+      const target = this[Private].todos[key];
+      target.active = !target.active;
+    }
+
+    _listListen() {
+      this._toggleListen();
+    }
+
+    _templatify({ content, id, active }) {
+      return `<li data-key="${id}" class="${active ? "" : "completed"}">
+          <input class="toggle" type="checkbox" ${active ? "" : "checked"} />
           <label>${content}</label>
           <button class="destroy">
         </button></li>`;
@@ -71,7 +99,7 @@ const TodoApp = (() => {
     }
 
     _todoCount() {
-      const count = this[Private].todos.filter(v => v.status).length;
+      const count = this[Private].todos.filter(v => v.active).length;
       return count == 0 || count == 1
         ? `${count} item left`
         : `${count} items left`;
