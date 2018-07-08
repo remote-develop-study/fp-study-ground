@@ -81,10 +81,10 @@ const TodoApp = (() => {
 
 document.addEventListener("DOMContentLoaded", () => {
   const todoapp = new TodoApp("#app");
+  const { data } = localStorage;
   const { todos } =
-    typeof localStorage.data == "string" &&
-    Array.isArray(JSON.parse(localStorage.data).todos)
-      ? JSON.parse(localStorage.data)
+    typeof data == "string" && Array.isArray(JSON.parse(data).todos)
+      ? JSON.parse(data)
       : { todos: [] };
   todoapp.init(todos);
 });
