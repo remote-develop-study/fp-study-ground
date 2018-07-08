@@ -98,31 +98,27 @@
         if(e.target.className === "destroy"){
             deleteTodo(e.target.dataset.id);
         }
+
         if(e.target.tagName === "LABEL"){
-            //console.log("click");
             e.target.addEventListener('dblclick', e => {
-                const elem = e.target.parentNode.parentNode;
+                const $targetLi = e.target.parentNode.parentNode;
+                const editInput = [...$targetLi.childNodes].filter(v => (v.className === "edit"))[0];
 
-                if(elem.classList.contains("editing") == false){
+                $targetLi.classList.add("editing");
+                editInput.focus();
 
-                    //console.log("dblclick");
-                    const editInput = [...elem.childNodes].filter(v => (v.className === "edit"))[0];
-                    elem.classList.add("editing");
-                    editInput.focus();
-                    editInput.addEventListener('keydown', e => {
-                        //console.log('editInput keydown');
-                        if(e.keyCode === 13){
-                            editTodo(e.target.dataset.id, e.target.value);
-                            e.target.parentNode.classList.remove("editing");
-                        }
-                    })
-                    editInput.addEventListener('blur', e => {
-                        //console.log('editInput blur');
+                editInput.addEventListener('keydown', e => {
+                    if(e.keyCode === 13){
+                        editTodo(e.target.dataset.id, e.target.value);
                         e.target.parentNode.classList.remove("editing");
-                    })
-                }
+                    }
+                })
+                editInput.addEventListener('blur', e => {
+                    e.target.parentNode.classList.remove("editing");
+                })
             });
         }
+        
         if(e.target.className === "toggle"){
             toggleTodo(e.target.dataset.id);
         }
