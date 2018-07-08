@@ -3,6 +3,7 @@ import Todo from "./todo.js";
 
 const TodoApp = (() => {
   const Private = Symbol();
+  let size = 0;
 
   return class {
     constructor(parent) {
@@ -21,7 +22,8 @@ const TodoApp = (() => {
     }
 
     _save() {
-      localStorage.data = JSON.stringify({ todos: this[Private].todos });
+      const { todos } = this[Private];
+      localStorage.data = JSON.stringify({ todos });
       this._render();
     }
 
@@ -38,7 +40,7 @@ const TodoApp = (() => {
 
     _create_todo_list() {
       return this[Private].todos
-        .map(({ content }, i) => this._templatify(content, i))
+        .map(({ content, id }) => this._templatify(content, id))
         .join("");
     }
 
@@ -47,7 +49,7 @@ const TodoApp = (() => {
       new_todo.addEventListener("keypress", ({ key, target: { value } }) => {
         if (key != "Enter") return;
         else {
-          this[Private].todos.push(new Todo(value));
+          this[Private].todos.push(new Todo(value, size++));
           this._save();
           new_todo.value = "";
           this._render();
@@ -55,8 +57,12 @@ const TodoApp = (() => {
       });
     }
 
-    _templatify(content, idx) {
-      return `<li data-key="${idx}"><input class="toggle" type="checkbox" /><label>${content}</label><button class="destroy"></button></li>`;
+    _templatify(content, id) {
+      return `<li data-key="${id}">
+          <input class="toggle" type="checkbox" />
+          <label>${content}</label>
+          <button class="destroy">
+        </button></li>`;
     }
 
     _mainDisplay() {

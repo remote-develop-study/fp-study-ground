@@ -1,7 +1,6 @@
 export default class Todo {
-  constructor(content) {
-    this.content = content;
-    this.active = true;
+  constructor(content, id) {
+    Object.assign(this, { content, id, active: true });
   }
 
   set setContent(content) {
