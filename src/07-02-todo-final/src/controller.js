@@ -6,8 +6,6 @@ export default class Controller {
 		this.model = model;
 	}
 
-	// TODO: 내림차순으로 보여주기
-	// TODO: default All
 	async init() {
 		const _ = this;
 
@@ -25,8 +23,8 @@ export default class Controller {
 
 	async loadTodoData() {
 		const URL = './db/data.json';
-
 		const result = await fetchData(URL);
+
 		this.mappingTodoData(result.todo);
 	}
 
@@ -34,12 +32,14 @@ export default class Controller {
 		this.model.setTodoList(todo);
 	}
 
-	addTodo(target) {
+	addTodo({ target: $NEW_TEXT_INPUT, keyCode }) {
+		if (keyCode !== 13 || !$NEW_TEXT_INPUT.value) return;
+
 		const _ = this;
 		const todoList = _.model.getTodoList();
 		const [lastTodo] = todoList.slice(-1);
 		const id = todoList.length > 0 ? lastTodo.id + 1 : 0;
-		const newTodo = { id, content: target.value, completed: false };
+		const newTodo = { id, content: $NEW_TEXT_INPUT.value, completed: false };
 
 		_.model.addTodo(newTodo);
 		_.view.addTodo(newTodo);
@@ -48,17 +48,17 @@ export default class Controller {
 		const activeCount = _.model.getTodoLength(false);
 		_.view.updateTodoCount(activeCount);
 
-		target.value = '';
+		$NEW_TEXT_INPUT.value = '';
 	}
 
-	removeTodo(target) {
+	removeTodo($LI) {
 		const _ = this;
-		const id = Number(target.id);
+		const selectedId = Number($LI.id);
 		const todoList = _.model.getTodoList();
-		const targetIndex = todoList.findIndex(todo => todo.id === id);
+		const selectedIndex = todoList.findIndex(todo => todo.id === selectedId);
 
-		_.model.removeTodo(targetIndex);
-		_.view.removeTodo(target);
+		_.model.removeTodo(selectedIndex);
+		_.view.removeTodo($LI);
 		_.toggleFooter();
 
 		const activeCount = _.model.getTodoLength(false);
@@ -70,35 +70,46 @@ export default class Controller {
 		this.view.showEditMode(e);
 	}
 
-	updateTodo({ target, keyCode }) {
-		if (keyCode !== 13 || !target.value) return;
+	updateTodo({ target: $EDIT_TEXT_INPUT, keyCode }) {
+		if (keyCode !== 13 || !$EDIT_TEXT_INPUT.value) return;
 		const _ = this;
-		const $parentNode = target.parentNode;
-		const id = Number($parentNode.id);
+		const $LI = $EDIT_TEXT_INPUT.parentNode;
+		const id = Number($LI.id);
 		const todoList = _.model.getTodoList();
 		const targetIndex = todoList.findIndex(todo => todo.id === id);
-		const $label = $parentNode.querySelector('label');
+		const $label = $LI.querySelector('label');
 
-		_.model.updateTodo(targetIndex, target.value);
-		$label.textContent = target.value;
-		_.view.hideEditMode(target, $label);
+		_.model.updateTodo(targetIndex, $EDIT_TEXT_INPUT.value);
+		$label.textContent = $EDIT_TEXT_INPUT.value;
+		_.view.hideEditMode($EDIT_TEXT_INPUT, $label);
 	}
 
-	toggleState({ parentNode }) {
+	hideEditMode($EDIT_TEXT_INPUT) {
+		this.view.hideEditMode(
+			$EDIT_TEXT_INPUT,
+			$EDIT_TEXT_INPUT.parentNode.querySelector('label'),
+		);
+	}
+
+	toggleState(target, status = undefined) {
 		const _ = this;
-		const id = Number(parentNode.id);
+		const $LI = status === undefined ? target.parentNode : target;
+		const id = Number($LI.id);
 		const todoList = _.model.getTodoList();
 		const targetIndex = todoList.findIndex(todo => todo.id === id);
 
-		_.model.toggleState(targetIndex);
-		_.view.toggleState(parentNode, id);
-		const activeCount = _.model.getTodoLength(false);
-		_.view.updateTodoCount(activeCount);
+		_.model.toggleState(targetIndex, status);
 		_.toggleClsCompleted();
+
+		const activeCount = _.model.getTodoLength(false);
+
+		_.view.toggleState($LI, id);
+		_.view.updateTodoCount(activeCount);
+		status === undefined && _.view.toggleToggleAllBtn(false);
 	}
 
-	clearCompleted(completedTodo) {
-		[...completedTodo].map(ele => this.removeTodo(ele));
+	clearCompleted($COMPLETED_TODO) {
+		[...$COMPLETED_TODO].map($TODO => this.removeTodo($TODO));
 	}
 
 	toggleFooter() {
@@ -116,28 +127,36 @@ export default class Controller {
 		_.view.toggleClsCompleted(isCompletedCount >= 1 ? 'block' : 'none');
 	}
 
-	// TODO: 리팩토링 & Active일때 Completed일때 전체체크박스 디스플레이 토글
-	changeFilter($FILTERS, $TODO_LIST, target) {
-		const [selectedState] = target.href.split('/').slice(-1);
-		const toogleDisplay = this.view.toogleDisplay;
+	changeFilter($FILTERS, $TODO_LIST, $SELECTED_BTN) {
+		const [selectedState] = $SELECTED_BTN.href.split('/').slice(-1);
 
-		[...$FILTERS].map(ele => {
-			ele.classList.value === 'selected' && this.view.removeSelectedFilter(ele);
+		[...$FILTERS].map($A => {
+			$A.classList.value === 'selected' && this.view.removeSelectedFilter($A);
 		});
 
-		[...$TODO_LIST].map(ele => {
+		[...$TODO_LIST].map($LI => {
 			let result = 'list-item';
 			if (selectedState === 'active') {
-				result = ele.classList.value === 'completed' ? 'none' : 'list-item';
+				result = $LI.classList.value === 'completed' ? 'none' : 'list-item';
 			}
 			if (selectedState === 'completed') {
-				result = ele.classList.value === 'completed' ? 'list-item' : 'none';
+				result = $LI.classList.value === 'completed' ? 'list-item' : 'none';
 			}
-			toogleDisplay(ele, result);
+			this.view.toogleDisplay($LI, result);
 		});
-		this.view.addSelectedFilter(target);
+		this.view.addSelectedFilter($SELECTED_BTN);
 	}
 
-	// TODO: 전체 투두 토글
-	toggleAll() {}
+	toggleAll($TOGGLE_ALL, $TODO_LIST) {
+		const isChecked = $TOGGLE_ALL.checked;
+		const isCompletedList = $LI =>
+			isChecked
+				? $LI.classList.value !== 'completed'
+				: $LI.classList.value === 'completed';
+
+		[...$TODO_LIST].filter(isCompletedList).map($LI => {
+			this.toggleState($LI, isChecked);
+			this.view.toggleChecked($LI.querySelector('.toggle'), isChecked);
+		});
+	}
 }

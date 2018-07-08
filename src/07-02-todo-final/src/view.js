@@ -4,74 +4,83 @@ export default class View {
 	}
 
 	init(todo) {
-		// TODO: 템플릿 리터럴로 교체
 		todo.map(item => {
-			const $li = document.createElement('li');
-			const $checkBox = document.createElement('input');
-			const $label = document.createElement('label');
-			const $closeBtn = document.createElement('button');
+			const $LI = document.createElement('li');
+			const $CHECK_BOX = document.createElement('input');
+			const $LABEL = document.createElement('label');
+			const $CLOSE_BTN = document.createElement('button');
 
 			// TODO: data-id로 바꾸기
-			$li.setAttribute('id', item.id);
-			$checkBox.setAttribute('type', 'checkbox');
+			$LI.setAttribute('id', item.id);
+			$CHECK_BOX.setAttribute('type', 'checkbox');
 
-			$checkBox.classList.add('toggle');
-			$closeBtn.classList.add('destroy');
-			$label.textContent = item.content;
+			$CHECK_BOX.classList.add('toggle');
+			$CLOSE_BTN.classList.add('destroy');
+			$LABEL.textContent = item.content;
 
 			if (item.completed) {
-				$li.classList.add('completed');
-				$checkBox.checked = true;
+				$LI.classList.add('completed');
+				this.toggleChecked($CHECK_BOX, true);
 			}
 
-			$li.appendChild($checkBox);
-			$li.appendChild($label);
-			$li.appendChild($closeBtn);
+			$LI.appendChild($CHECK_BOX);
+			$LI.appendChild($LABEL);
+			$LI.appendChild($CLOSE_BTN);
 
-			this.$.TODO_LIST.appendChild($li);
+			this.$.TODO_LIST.appendChild($LI);
 		});
+
+		// TODO: 템플릿 리터럴로 교체
+		// const $TMPL = todo.map(item => {
+		//   return `<li id="${item.id}" class="${item.completed && 'completed'}">
+		//       <input class="toggle" type="checkbox" ${item.completed && 'checked'}>
+		//       <label>${item.content}</label>
+		//       <button class="destroy"></button>
+		//     </li>`;
+		// });
+		// this.$.TODO_LIST.innerHTML = $TMPL.join('');
 	}
 
 	toggleFooter(status) {
-		this.$.FOOTER.style.display = status;
+		this.toogleDisplay(this.$.FOOTER, status);
 	}
 
 	addTodo({ id, content }) {
-		const $li = document.createElement('li');
-		$li.setAttribute('id', id);
+		const $LI = document.createElement('li');
+		$LI.setAttribute('id', id);
 
-		$li.innerHTML = `<input class="toggle" type="checkbox">
+		$LI.innerHTML = `<input class="toggle" type="checkbox">
 		      <label>${content}</label>
 		      <button class="destroy"></button>
         </li>`;
 
-		this.$.TODO_LIST.appendChild($li);
+		this.$.TODO_LIST.appendChild($LI);
 	}
 
 	removeTodo(node) {
 		this.$.TODO_LIST.removeChild(node);
 	}
 
-	showEditMode({ target: $label }) {
-		const { parentNode: $parentNode } = $label;
-		const $newInput = document.createElement('input');
+	showEditMode({ target: $LABEL }) {
+		const { parentNode: $LI } = $LABEL;
+		const $NEW_INPUT = document.createElement('input');
 
-		$newInput.setAttribute('class', 'edit');
-		$newInput.value = $label.textContent;
+		$NEW_INPUT.setAttribute('class', 'edit');
+		$NEW_INPUT.value = $LABEL.textContent;
 
-		this.toogleDisplay($label, 'none');
-		$parentNode.classList.value = 'editing';
-		$parentNode.appendChild($newInput);
-		$newInput.focus();
+		this.toogleDisplay($LABEL, 'none');
+		$LI.classList.value = 'editing';
+		$LI.appendChild($NEW_INPUT);
+		$NEW_INPUT.focus();
 	}
 
-	hideEditMode(target, $label) {
-		const $newInput = target;
-		const $parentNode = target.parentNode;
+	hideEditMode(target, $LABEL) {
+		const $NEW_INPUT = target;
+		const $LI = target.parentNode;
 
-		$parentNode.removeAttribute('class');
-		$parentNode.removeChild($newInput);
-		this.toogleDisplay($label, 'block');
+		$LI.removeAttribute('class');
+		$LI.removeChild($NEW_INPUT);
+		this.toogleDisplay($LABEL, 'block');
 	}
 
 	toogleDisplay($target, condition) {
@@ -79,23 +88,32 @@ export default class View {
 	}
 
 	updateTodoCount(count) {
-		// TODO: item & items 처리
-		this.$.TODO_COUNT.textContent = `${count} item left`;
+		const $ITEM = `item${count > 1 ? 's' : ''}`;
+
+		this.$.TODO_COUNT.textContent = `${count} ${$ITEM} left`;
 	}
 
-	toggleState($parentNode) {
-		$parentNode.classList.toggle('completed');
+	toggleState($TARGET) {
+		$TARGET.classList.toggle('completed');
 	}
 
 	toggleClsCompleted(status) {
 		this.toogleDisplay(this.$.CLS_COMPLETED, status);
 	}
 
-	addSelectedFilter($target) {
-		$target.classList.add('selected');
+	addSelectedFilter($TARGET) {
+		$TARGET.classList.add('selected');
 	}
 
-	removeSelectedFilter($target) {
-		$target.removeAttribute('class');
+	removeSelectedFilter($TARGET) {
+		$TARGET.removeAttribute('class');
+	}
+
+	toggleChecked($TARGET, status) {
+		$TARGET.checked = status;
+	}
+
+	toggleToggleAllBtn(status) {
+		this.toggleChecked(this.$.TOGGLE_ALL, status);
 	}
 }
