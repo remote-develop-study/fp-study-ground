@@ -39,22 +39,6 @@ const TodoApp = (() => {
         $("#todo-list").innerHTML = this._generate_todo_list();
     }
 
-    _generate_todo_list() {
-      const { todos } = this[Private];
-      const query = location.hash.slice(1) ? location.hash.slice(1) : "all";
-      let result;
-      this._check_filters(query);
-      if (query == "all") result = todos;
-      else if (query == "active") result = todos.filter(({ active }) => active);
-      else if (query == "completed")
-        result = todos.filter(({ active }) => !active);
-      return result.map(v => this._templatify(v)).join("");
-    }
-
-    _check_filters(query) {
-      $(`#filter-${query}`).classList.add("selected");
-    }
-
     _newTodoListen() {
       const new_todo = $("#new-todo");
       new_todo.addEventListener("keypress", ({ key, target: { value } }) => {
@@ -65,6 +49,13 @@ const TodoApp = (() => {
           this._save();
         }
       });
+    }
+
+    _listListen() {
+      this._toggleListen();
+      this._deleteListen();
+      this._hashListen();
+      this._toggleAllListen();
     }
 
     _toggleListen() {
@@ -82,11 +73,6 @@ const TodoApp = (() => {
       });
     }
 
-    _hashListen() {
-      const _render = this._render.bind(this);
-      window.addEventListener("hashchange", _render);
-    }
-
     _deleteListen() {
       $("#todo-list").addEventListener("click", ({ target }) => {
         if (target.classList.value != "destroy") return;
@@ -99,6 +85,11 @@ const TodoApp = (() => {
           this._save();
         }
       });
+    }
+
+    _hashListen() {
+      const _render = this._render.bind(this);
+      window.addEventListener("hashchange", _render);
     }
 
     _toggleAllListen() {
@@ -115,24 +106,20 @@ const TodoApp = (() => {
       );
     }
 
-    _toggleActive(id) {
-      const target = this[Private].todos.find(v => v.id == id);
-      target.active = !target.active;
+    _check_filters(query) {
+      $(`#filter-${query}`).classList.add("selected");
     }
 
-    _listListen() {
-      this._toggleListen();
-      this._deleteListen();
-      this._hashListen();
-      this._toggleAllListen();
-    }
-
-    _templatify({ content, id, active }) {
-      return `<li data-id="${id}" class="${active ? "" : "completed"}">
-          <input class="toggle" type="checkbox" ${active ? "" : "checked"} />
-          <label>${content}</label>
-          <button class="destroy">
-        </button></li>`;
+    _generate_todo_list() {
+      const { todos } = this[Private];
+      const query = location.hash.slice(1) ? location.hash.slice(1) : "all";
+      let result;
+      this._check_filters(query);
+      if (query == "all") result = todos;
+      else if (query == "active") result = todos.filter(({ active }) => active);
+      else if (query == "completed")
+        result = todos.filter(({ active }) => !active);
+      return result.map(v => this._templatify(v)).join("");
     }
 
     _mainDisplay() {
@@ -143,11 +130,24 @@ const TodoApp = (() => {
       return this[Private].todos.length;
     }
 
+    _templatify({ content, id, active }) {
+      return `<li data-id="${id}" class="${active ? "" : "completed"}">
+          <input class="toggle" type="checkbox" ${active ? "" : "checked"} />
+          <label>${content}</label>
+          <button class="destroy">
+        </button></li>`;
+    }
+
     _todoCount() {
       const count = this[Private].todos.filter(v => v.active).length;
       return count == 0 || count == 1
         ? `${count} item left`
         : `${count} items left`;
+    }
+
+    _toggleActive(id) {
+      const target = this[Private].todos.find(v => v.id == id);
+      target.active = !target.active;
     }
   };
 })();
