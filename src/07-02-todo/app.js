@@ -158,9 +158,7 @@ const TodoApp = (() => {
 
     _todoCount() {
       const count = this[Private].todos.filter(v => v.active).length;
-      return count == 0 || count == 1
-        ? `${count} item left`
-        : `${count} items left`;
+      return `${count} item${count == 1 ? "s" : ""} left`;
     }
 
     _toggleActive(id) {
