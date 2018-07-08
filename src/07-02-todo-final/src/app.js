@@ -9,16 +9,35 @@ const controller = new Controller(view, model);
 
 window.onload = function() {
 	controller.init();
+
+	$.NEW_TEXT_INPUT.addEventListener('keyup', handleInput);
+	$.TODO_LIST.addEventListener('click', handleListClick);
+	$.TODO_LIST.addEventListener('dblclick', handleListDblClick);
+	$.CLS_COMPLETED.addEventListener('click', handleClsCompleted);
+	$.FILTERS.addEventListener('click', handleFilters);
+	$.TOGGLE_ALL.addEventListener('click', handleToggleAll);
 };
 
-// TODO: 이벤트 처리 공통화 또는 분리....
-$.NEW_TEXT_INPUT.addEventListener('keyup', function({ target, keyCode }) {
-	if (keyCode !== 13 || !target.value) return;
-	controller.addTodo(target);
-});
+const handleUpdateMode = e => {
+	const $EDIT_TEXT_INPUT = $.TODO_LIST.querySelector('.edit');
 
-// TODO: 편집모드 해제 이벤트 필요
-$.TODO_LIST.addEventListener('click', function({ target }) {
+	if (e.target === $EDIT_TEXT_INPUT) return;
+
+	controller.hideEditMode($EDIT_TEXT_INPUT);
+	$.BODY.removeEventListener('click', handleUpdateMode);
+};
+
+const handleInput = e => {
+	if (e.target.classList.value === 'new-todo') {
+		controller.addTodo(e);
+	}
+
+	if (e.target.classList.value === 'edit') {
+		controller.updateTodo(e);
+	}
+};
+
+const handleListClick = ({ target }) => {
 	if (target.classList.value === 'destroy') {
 		controller.removeTodo(target.parentNode);
 	}
@@ -26,28 +45,33 @@ $.TODO_LIST.addEventListener('click', function({ target }) {
 	if (target.classList.value === 'toggle') {
 		controller.toggleState(target);
 	}
-});
+};
 
-$.TODO_LIST.addEventListener('dblclick', async function(e) {
-	if (e.target.tagName !== 'LABEL') return;
-	await controller.showEditMode(e);
-	const $EDIT_TEXT_INPUT = $.TODO_LIST.querySelector('.edit');
+const handleClsCompleted = () => {
+	const $COMPLETED_TODO = $.TODO_LIST.querySelectorAll('.completed');
 
-	$EDIT_TEXT_INPUT.addEventListener('keyup', function(e) {
-		controller.updateTodo(e);
-	});
-});
+	controller.clearCompleted($COMPLETED_TODO);
+};
 
-$.CLS_COMPLETED.addEventListener('click', function() {
-	const $completedTodoItem = $.TODO_LIST.querySelectorAll('.completed');
-
-	controller.clearCompleted($completedTodoItem);
-});
-
-$.FILTERS.addEventListener('click', function({ target }) {
+const handleFilters = ({ target }) => {
 	if (target.tagName !== 'A') return;
 	const $FILTERS = $.FILTERS.querySelectorAll('li a');
 	const $TODO_LIST = $.TODO_LIST.querySelectorAll('li');
 
 	controller.changeFilter($FILTERS, $TODO_LIST, target);
-});
+};
+
+const handleToggleAll = e => {
+	const $TODO_LIST = $.TODO_LIST.querySelectorAll('li');
+
+	controller.toggleAll(e.target, $TODO_LIST);
+};
+
+const handleListDblClick = async e => {
+	if (e.target.tagName !== 'LABEL') return;
+	await controller.showEditMode(e);
+	const $EDIT_TEXT_INPUT = $.TODO_LIST.querySelector('.edit');
+
+	$EDIT_TEXT_INPUT.addEventListener('keyup', handleInput);
+	$.BODY.addEventListener('click', handleUpdateMode);
+};

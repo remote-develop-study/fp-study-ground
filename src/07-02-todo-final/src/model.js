@@ -30,7 +30,8 @@ export default class Model {
 		this.todoList[id].content = newContent;
 	}
 
-	toggleState(id) {
-		this.todoList[id].completed = !this.todoList[id].completed;
+	toggleState(id, status = undefined) {
+		this.todoList[id].completed =
+			status === undefined ? !this.todoList[id].completed : status;
 	}
 }
