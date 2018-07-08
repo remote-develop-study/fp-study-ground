@@ -22,8 +22,8 @@ const TodoApp = (() => {
       const app = $(this[Private].parent);
       if (!app) throw "invalid parent";
       this._newTodoListen();
-      this._listListen();
-      if (todos.length) this._render();
+      this._eventListen();
+      this._render();
     }
 
     _save() {
@@ -35,8 +35,11 @@ const TodoApp = (() => {
     _render() {
       $("#todo-count").innerHTML = this._todoCount();
       Array.from($$("#filters a")).forEach(v => v.classList.remove("selected"));
-      if (this._mainDisplay())
+      this._check_filters();
+      if (this._mainDisplay()) {
         $("#todo-list").innerHTML = this._generate_todo_list();
+        this._clearCompletedDisplay();
+      }
     }
 
     _newTodoListen() {
@@ -51,11 +54,17 @@ const TodoApp = (() => {
       });
     }
 
-    _listListen() {
+    _eventListen() {
+      this._hashListen();
       this._toggleListen();
       this._deleteListen();
-      this._hashListen();
       this._toggleAllListen();
+      this._clearCompletedListen();
+    }
+
+    _hashListen() {
+      const _render = this._render.bind(this);
+      window.addEventListener("hashchange", _render);
     }
 
     _toggleListen() {
@@ -87,11 +96,6 @@ const TodoApp = (() => {
       });
     }
 
-    _hashListen() {
-      const _render = this._render.bind(this);
-      window.addEventListener("hashchange", _render);
-    }
-
     _toggleAllListen() {
       $("#main > input").nextElementSibling.addEventListener(
         "click",
@@ -106,15 +110,29 @@ const TodoApp = (() => {
       );
     }
 
-    _check_filters(query) {
+    _clearCompletedListen() {
+      $("#clear-completed").addEventListener("click", () => {
+        let { todos } = this[Private];
+        this[Private].todos = todos.filter(({ active }) => active);
+        this._save();
+      });
+    }
+
+    _check_filters() {
+      const query = location.hash.slice(1) ? location.hash.slice(1) : "all";
       $(`#filter-${query}`).classList.add("selected");
+    }
+
+    _clearCompletedDisplay() {
+      if (this[Private].todos.filter(({ active }) => !active).length) {
+        $("#clear-completed").style.display = "block";
+      } else $("#clear-completed").style.display = "none";
     }
 
     _generate_todo_list() {
       const { todos } = this[Private];
       const query = location.hash.slice(1) ? location.hash.slice(1) : "all";
       let result;
-      this._check_filters(query);
       if (query == "all") result = todos;
       else if (query == "active") result = todos.filter(({ active }) => active);
       else if (query == "completed")
@@ -126,7 +144,7 @@ const TodoApp = (() => {
       const main = $("#main");
       this[Private].todos.length
         ? (main.style.display = "block")
-        : main.style.display == "none";
+        : (main.style.display = "none");
       return this[Private].todos.length;
     }
 
