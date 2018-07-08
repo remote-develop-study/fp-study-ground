@@ -5,7 +5,7 @@ import $ from './selector.js'
 	<li class="${todo.done && 'completed'}">
 		<input class="toggle" type="checkbox" data-id="${todo.id}" ${todo.done &&
     'checked'}>
-		<label>${todo.title}</label>
+		<label contentEditable data-id="${todo.id}">${todo.title}</label>
 		<button data-id="${todo.id}" class="delete"/>
 	</li>`
 
@@ -19,22 +19,16 @@ import $ from './selector.js'
     title,
     done: false
   })
-  
-  const render = state => {
-    console.time('render')
 
-    const newTodos = state.todos
+  const render = state => {
+    $('.todo-list').innerHTML = [...state.todos]
       .filter(todo => state.filter !== 'active' || !todo.done)
       .filter(todo => state.filter !== 'completed' || todo.done)
       .reverse()
       .map(todoDOM)
       .join('')
-
-    $('.todo-list').innerHTML = newTodos
     $('.todo-count').innerHTML = `
     <strong>${state.todos.filter(todo => !todo.done).length}</strong> items left`
-
-    console.timeEnd('render')
   }
 
   const bindDOMEvents = state => {
@@ -62,6 +56,20 @@ import $ from './selector.js'
             done: !todo.done
           }
         )
+      }
+    })
+    $('.todo-list').addEventListener('keypress', e => {
+      if (e.keyCode !== 13) return
+      e.target.blur()
+      if (!e.target.textContent.trim()) {
+        console.log(!e.target.textContent.trim())
+        state.todos = state.todos.filter(todo => todo.id != e.target.dataset.id)
+      }
+      if (e.target.textContent.trim()) {
+        state.todos = state.todos.map(todo =>
+          todo.id != e.target.dataset.id ? todo : { ...todo,
+            title: e.target.textContent.trim()
+          })
       }
     })
     $('.clear-completed').addEventListener('click', e => {
