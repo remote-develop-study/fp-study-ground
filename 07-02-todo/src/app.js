@@ -47,7 +47,7 @@ const TodoApp = (() => {
     _newTodoListen() {
       const new_todo = $("#new-todo");
       new_todo.addEventListener("keypress", ({ key, target: { value } }) => {
-        if (key != "Enter") return;
+        if (key != "Enter" || value == "") return;
         else {
           this[Private].todos.push(new Todo(value, size++));
           this._save();
