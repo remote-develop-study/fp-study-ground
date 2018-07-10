@@ -1,0 +1,47 @@
+section {
+    width: 80%;
+    margin: 0 auto;
+}
+
+article {
+    width: 50%;
+    margin: 0 auto;
+}
+
+
+input[type=checkbox]:checked + label {
+    text-decoration: line-through;
+}
+
+.todo-prompt {
+    display: block;
+    width: 100%;
+
+}
+
+.todo {
+    position: relative;
+    font-size: 16px;
+}
+
+li.todo:hover .remove {
+    display: inline-block;
+}
+
+.remove {
+    display: none;
+    top: 0;
+    bottom: 0;
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+    color: #cc9a9a;
+    margin: auto 0 11px;
+    border: none;
+    background: transparent;
+    transition: color 0.2s ease-out;
+}
+
+.remove:after {
+    content: 'x'
+}

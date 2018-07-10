@@ -1,46 +1,33 @@
 <!doctype html>
-<html>
-
-  <head>
-    <meta charset="utf-8">
-    <title>VanillaJS • TodoMVC</title>
-    <link rel="stylesheet" href="./static/base.css">
-    <link rel="stylesheet" href="./static/index.css">
-  </head>
-
-  <body>
-    <section class="todoapp">
-      <header class="header">
-        <h1>todos</h1>
-        <input class="new-todo" placeholder="What needs to be done?" autofocus>
-      </header>
-      <section class="main">
-        <input class="toggle-all" type="checkbox">
-        <label for="toggle-all">Mark all as complete</label>
-        <ul class="todo-list"></ul>
-      </section>
-      <footer class="footer">
-        <span class="todo-count"></span>
-        <ul class="filters">
-          <li>
-            <a href="#/" class="selected">All</a>
-          </li>
-          <li>
-            <a href="#/active">Active</a>
-          </li>
-          <li>
-            <a href="#/completed">Completed</a>
-          </li>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./static/reset.css">
+</head>
+<body>
+<header class="head">
+    <h1>Todo List</h1>
+</header>
+<section class="container">
+    <article class="input">
+        <input class="todo-prompt" placeholder="Anything you have to do" autofocus>
+    </article>
+    <article class="todo-container">
+        <ul class="todo-list">
+            <li class="todo">
+                <div>
+                    <input type="checkbox" name="todo" value="할일" id="할일" title="test"/>
+                    <label for="할일">할일</label>
+                    <button class="remove"></button>
+                </div>
+            </li>
         </ul>
-        <button class="clear-completed">Clear completed</button>
-      </footer>
-    </section>
-    <footer class="info">
-      <p>Double-click to edit a todo</p>
-      <p>Part of
-        <a href="http://todomvc.com">TodoMVC</a>
-      </p>
-    </footer>
-  </body>
-
+    </article>
+</section>
+<script src="./dist/bundle.js"></script>
+</body>
 </html>
