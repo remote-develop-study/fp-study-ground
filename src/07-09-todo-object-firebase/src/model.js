@@ -5,17 +5,20 @@ export default class Model {
 
 	getTodoLength(status = 'All') {
 		const { todoList } = this;
-		const isLength = todoList.filter(todo => todo.completed === status).length;
+		let isLength = 0;
 
-		return status === 'All' ? todoList.length : isLength;
+		for (const i in todoList) {
+			todoList[i].completed === status && isLength++;
+		}
+		return status === 'All' ? Object.keys(todoList).length : isLength;
 	}
 
 	setTodoList(todoList) {
 		this.todoList = todoList;
 	}
 
-	addTodo(newTodo) {
-		this.todoList.push(newTodo);
+	addTodo({ id, content, completed }) {
+		this.todoList[id] = { content, completed };
 	}
 
 	removeTodo(id) {
@@ -30,7 +33,8 @@ export default class Model {
 		this.todoList[id].content = newContent;
 	}
 
-	toggleState(id) {
-		this.todoList[id].completed = !this.todoList[id].completed;
+	toggleState(id, status = undefined) {
+		this.todoList[id].completed =
+			status === undefined ? !this.todoList[id].completed : status;
 	}
 }
