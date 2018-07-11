@@ -3,7 +3,7 @@ var $input_todo = document.querySelector(".new-todo");
 // 로컬스토리지 저장소
 var data = localStorage.data ? JSON.parse(localStorage.data) : [];
 var data_local = JSON.parse(window.localStorage.getItem("data"));
-// 머지 리퀘 테스트
+// 머지 리퀘 테스트1
 getItem(data);
 //갯수 보기
 setInterval(count, 500);
