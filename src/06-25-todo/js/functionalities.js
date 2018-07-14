@@ -24,7 +24,6 @@
   selectAll();
 })();
 
-// State machine with closure
 const store = (() => {
   localStorage.setItem('autoIncrementedId', localStorage.getItem('autoIncrementedId') || 0);
 
@@ -40,41 +39,32 @@ const store = (() => {
 // Update count of left items
 function updateLeftItemsCount() {
   const spanTag = document.querySelector('span.todo-count');
-  // const leftItemsCount = Array.from(document.querySelectorAll('ul.todo-list li'))
-  //   .filter((li) => li.className === '')
-  //   .length;
   const leftItemsCount = localStorage.getItem('todos') ?
     JSON.parse(localStorage.getItem('todos'))
-      .filter((todo) => todo.status === '')
-      .length
+    .filter((todo) => todo.status === '')
+    .length
     :
     0;
   spanTag.innerHTML = `${leftItemsCount} ${leftItemsCount <= 1 ? 'item' : 'items'} left`;
 }
 
-// Input tag onchange handler
+// 한곳에서만 사용됨
 function onChange(e) {
   if(e.key === 'Enter') {
-    // VALIDATION
     if(e.target.value === '') return alert('Write what you need to do.');
-
     addTodo(e.target.value);
     e.target.value = '';
   }
 }
 
-// Add a todo
 function addTodo(value) {
   const ulTag = document.querySelector('ul.todo-list');
-
-  // Create tags for a li tag
   const liTag = document.createElement('li');
   const divTag = document.createElement('div');
   const inputTag = document.createElement('input');
   const labelTag = document.createElement('label');
   const buttonTag = document.createElement('button');
 
-  // Tags setting
   const liId = store.generateId();
   liTag.setAttribute('data-id', liId);
   divTag.className = 'view';
@@ -105,6 +95,7 @@ function addTodo(value) {
       });
     localStorage.setItem('todos', JSON.stringify(todos));
   });
+
   labelTag.innerHTML = value;
   buttonTag.className = 'destroy';
   buttonTag.addEventListener('click', () => { // Delete click
@@ -131,7 +122,6 @@ function addTodo(value) {
   liTag.appendChild(divTag);
   ulTag.appendChild(liTag);
 
-  // Update count
   updateLeftItemsCount();
 }
 
@@ -169,6 +159,7 @@ function selectAll() {
       divTag.className = 'view';
       inputTag.type = 'checkbox';
       inputTag.className = 'toggle';
+
       if(todo.status === 'completed') inputTag.checked = true;
       inputTag.addEventListener('click', () => {
         const currentClass = liTag.className;
@@ -195,6 +186,7 @@ function selectAll() {
           });
         localStorage.setItem('todos', JSON.stringify(todos));
       });
+
       labelTag.innerHTML = todo.value;
       buttonTag.className = 'destroy';
       buttonTag.addEventListener('click', () => {
@@ -218,7 +210,6 @@ function selectAll() {
     .sort((a, b) => Number(a.id) - Number(b.id))
     .forEach((todo) => ulTag.appendChild(todo));
 
-  // Update count
   updateLeftItemsCount();
 }
 
@@ -291,7 +282,6 @@ function selectActive() {
     .sort((a, b) => Number(a.id) - Number(b.id))
     .forEach((todo) => ulTag.appendChild(todo));
 
-  // Update count
   updateLeftItemsCount();
 }
 
@@ -316,7 +306,7 @@ function selectCompleted() {
   const todosFromStorage = localStorage.getItem('todos');
   if(!todosFromStorage) return;
   JSON.parse(todosFromStorage)
-    .filter((todo) => todo.status === 'completed')
+    .filter((todo) => todo.status === 'completed') //
     .map((todo) => {
       const liTag = document.createElement('li');
       const divTag = document.createElement('div');
@@ -364,7 +354,6 @@ function selectCompleted() {
     .sort((a, b) => Number(a.id) - Number(b.id))
     .forEach((todo) => ulTag.appendChild(todo));
 
-  // Update count
   updateLeftItemsCount();
 }
 
@@ -379,6 +368,7 @@ function saveTodo(todo) {
   }
 }
 
+// Clear completed button
 function clearCompletedTodos() {
   // Delete completed todos from storage
   const todos = JSON.parse(localStorage.getItem('todos'))
