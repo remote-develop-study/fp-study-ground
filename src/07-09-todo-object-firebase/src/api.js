@@ -45,7 +45,7 @@ function deleteData(URL, data) {
 		request.open('DELETE', URL);
 		request.setRequestHeader('Content-Type', 'application/json');
 		request.onload = function() {
-			resolve(JSON.parse(this.responseText).name);
+			resolve(JSON.parse(this.responseText));
 		};
 		request.send(JSON.stringify(data));
 	});

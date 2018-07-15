@@ -29,6 +29,7 @@ const handleUpdateMode = e => {
 
 const handleInput = e => {
 	if (e.target.classList.value === 'new-todo') {
+		e.preventDefault();
 		controller.addTodo(e);
 	}
 

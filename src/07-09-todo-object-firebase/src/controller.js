@@ -4,7 +4,7 @@ export default class Controller {
 	constructor(view, model) {
 		this.view = view;
 		this.model = model;
-		this.URL = 'https://mock-data-12c45.firebaseio.com/todo.json';
+		this.URL = 'https://mock-data-12c45.firebaseio.com';
 	}
 
 	async init() {
@@ -23,7 +23,7 @@ export default class Controller {
 	}
 
 	async loadTodoData() {
-		const result = await fetchData(this.URL);
+		const result = await fetchData(`${this.URL}/todo.json`);
 
 		this.mappingTodoData(result);
 	}
@@ -37,9 +37,11 @@ export default class Controller {
 
 		const _ = this;
 		const todoList = _.model.getTodoList();
-		const newTodo = { content: $NEW_TEXT_INPUT.value, completed: false };
-
-		const newTodoId = await putData(this.URL, newTodo);
+		const newTodo = {
+			content: $NEW_TEXT_INPUT.value,
+			completed: false,
+		};
+		const newTodoId = await putData(`${this.URL}/todo.json`, newTodo);
 		newTodo.id = newTodoId;
 
 		_.model.addTodo(newTodo);
@@ -48,17 +50,21 @@ export default class Controller {
 
 		const activeCount = _.model.getTodoLength(false);
 		_.view.updateTodoCount(activeCount);
-
 		$NEW_TEXT_INPUT.value = '';
 	}
 
 	removeTodo($LI) {
 		const _ = this;
-		const selectedId = Number($LI.id);
+		const selectedId = $LI.id;
 		const todoList = _.model.getTodoList();
-		const selectedIndex = todoList.findIndex(todo => todo.id === selectedId);
 
-		_.model.removeTodo(selectedIndex);
+		for (const id in todoList) {
+			if (selectedId === id) {
+				deleteData(`${this.URL}/todo/${id}.json`);
+			}
+		}
+
+		_.model.removeTodo(selectedId);
 		_.view.removeTodo($LI);
 		_.toggleFooter();
 
@@ -80,7 +86,7 @@ export default class Controller {
 
 		for (const id in todoList) {
 			if (id === $LI.id) {
-				updateData(this.URL, {
+				updateData(`${this.URL}/todo.json`, {
 					[id]: {
 						...todoList[id],
 						content: $EDIT_TEXT_INPUT.value,
@@ -93,32 +99,38 @@ export default class Controller {
 		}
 	}
 
-	hideEditMode($EDIT_TEXT_INPUT) {
-		this.view.hideEditMode(
-			$EDIT_TEXT_INPUT,
-			$EDIT_TEXT_INPUT.parentNode.querySelector('label'),
-		);
-	}
-
 	toggleState(target, status = undefined) {
 		const _ = this;
 		const $LI = status === undefined ? target.parentNode : target;
-		const id = Number($LI.id);
+		const selectedId = $LI.id;
 		const todoList = _.model.getTodoList();
-		const targetIndex = todoList.findIndex(todo => todo.id === id);
+		const { completed: originCompleted } = _.model.getTodoList(selectedId);
 
-		_.model.toggleState(targetIndex, status);
+		updateData(`${this.URL}/todo.json`, {
+			[selectedId]: {
+				...todoList[selectedId],
+				completed: !originCompleted,
+			},
+		});
+		_.model.toggleState(selectedId, status);
 		_.toggleClsCompleted();
 
 		const activeCount = _.model.getTodoLength(false);
 
-		_.view.toggleState($LI, id);
+		_.view.toggleState($LI, selectedId);
 		_.view.updateTodoCount(activeCount);
 		status === undefined && _.view.toggleToggleAllBtn(false);
 	}
 
 	clearCompleted($COMPLETED_TODO) {
 		[...$COMPLETED_TODO].map($TODO => this.removeTodo($TODO));
+	}
+
+	hideEditMode($EDIT_TEXT_INPUT) {
+		this.view.hideEditMode(
+			$EDIT_TEXT_INPUT,
+			$EDIT_TEXT_INPUT.parentNode.querySelector('label'),
+		);
 	}
 
 	toggleFooter() {

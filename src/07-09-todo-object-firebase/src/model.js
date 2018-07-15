@@ -23,9 +23,9 @@ export default class Model {
 
 	removeTodo(id) {
 		if (this.todoList.length === 1) {
-			this.todoList.length = 0;
+			this.todoList = {};
 		} else {
-			this.todoList.splice(id, 1);
+			delete this.todoList[id];
 		}
 	}
 
