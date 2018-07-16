@@ -155,7 +155,7 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-# Editor-based Rest Client
+# Editor-based Rest Database
 .idea/httpRequests
 
 ### WebStorm+all Patch ###
@@ -170,6 +170,11 @@ fabric.properties
 modules.xml
 .idea/misc.xml
 *.ipr
+
+# Serverless Webpack
+.build
+.webpack
+serverless.yml
 
 
 # End of https://www.gitignore.io/api/node,macos,webstorm+all
