@@ -32,11 +32,9 @@ export default class Controller {
 		this.model.setTodoList(todo);
 	}
 
-	async addTodo({ target: $NEW_TEXT_INPUT, keyCode }) {
-		if (keyCode !== 13 || !$NEW_TEXT_INPUT.value) return;
-
+	async addTodo(target) {
 		const _ = this;
-		const todoList = _.model.getTodoList();
+		const $NEW_TEXT_INPUT = target;
 		const newTodo = {
 			content: $NEW_TEXT_INPUT.value,
 			completed: false,
@@ -48,12 +46,12 @@ export default class Controller {
 		_.view.addTodo(newTodo);
 		_.toggleFooter();
 
-		const activeCount = _.model.getTodoLength(false);
+		const activeCount = await _.model.getTodoLength(false);
 		_.view.updateTodoCount(activeCount);
 		$NEW_TEXT_INPUT.value = '';
 	}
 
-	removeTodo($LI) {
+	async removeTodo($LI) {
 		const _ = this;
 		const selectedId = $LI.id;
 		const todoList = _.model.getTodoList();
@@ -68,7 +66,7 @@ export default class Controller {
 		_.view.removeTodo($LI);
 		_.toggleFooter();
 
-		const activeCount = _.model.getTodoLength(false);
+		const activeCount = await _.model.getTodoLength(false);
 		_.view.updateTodoCount(activeCount);
 		_.toggleClsCompleted();
 	}
@@ -77,9 +75,9 @@ export default class Controller {
 		this.view.showEditMode(e);
 	}
 
-	updateTodo({ target: $EDIT_TEXT_INPUT, keyCode }) {
-		if (keyCode !== 13 || !$EDIT_TEXT_INPUT.value) return;
+	updateTodo(target) {
 		const _ = this;
+		const $EDIT_TEXT_INPUT = target;
 		const $LI = $EDIT_TEXT_INPUT.parentNode;
 		const todoList = _.model.getTodoList();
 		const $label = $LI.querySelector('label');
@@ -99,19 +97,30 @@ export default class Controller {
 		}
 	}
 
-	toggleState(target, status = undefined) {
+	// TODO: some, every
+	async toggleState(target, status = undefined) {
 		const _ = this;
 		const $LI = status === undefined ? target.parentNode : target;
 		const selectedId = $LI.id;
 		const todoList = _.model.getTodoList();
 		const { completed: originCompleted } = _.model.getTodoList(selectedId);
 
-		updateData(`${this.URL}/todo.json`, {
+		await updateData(`${this.URL}/todo.json`, {
 			[selectedId]: {
 				...todoList[selectedId],
 				completed: !originCompleted,
 			},
 		});
+
+		const isCheckAll = () => {
+			let flag = false;
+			const todoList = _.model.getTodoList();
+			for (const id in todoList) {
+				if (todoList[id].completed) flag = true;
+			}
+			return flag;
+		};
+
 		_.model.toggleState(selectedId, status);
 		_.toggleClsCompleted();
 
@@ -120,6 +129,8 @@ export default class Controller {
 		_.view.toggleState($LI, selectedId);
 		_.view.updateTodoCount(activeCount);
 		status === undefined && _.view.toggleToggleAllBtn(false);
+		console.log(isCheckAll());
+		_.view.toggleToggleAllBtn(isCheckAll);
 	}
 
 	clearCompleted($COMPLETED_TODO) {

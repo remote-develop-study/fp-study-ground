@@ -10,7 +10,7 @@ const controller = new Controller(view, model);
 window.onload = function() {
 	controller.init();
 
-	$.NEW_TEXT_INPUT.addEventListener('keyup', handleInput);
+	$.NEW_TEXT_INPUT.addEventListener('keypress', handleInput);
 	$.TODO_LIST.addEventListener('click', handleListClick);
 	$.TODO_LIST.addEventListener('dblclick', handleListDblClick);
 	$.CLS_COMPLETED.addEventListener('click', handleClsCompleted);
@@ -27,14 +27,15 @@ const handleUpdateMode = e => {
 	$.BODY.removeEventListener('click', handleUpdateMode);
 };
 
-const handleInput = e => {
-	if (e.target.classList.value === 'new-todo') {
-		e.preventDefault();
-		controller.addTodo(e);
+const handleInput = ({ target, keyCode }) => {
+	if (keyCode !== 13 || !target.value) return;
+
+	if (target.classList.value === 'new-todo') {
+		controller.addTodo(target);
 	}
 
-	if (e.target.classList.value === 'edit') {
-		controller.updateTodo(e);
+	if (target.classList.value === 'edit') {
+		controller.updateTodo(target);
 	}
 };
 
