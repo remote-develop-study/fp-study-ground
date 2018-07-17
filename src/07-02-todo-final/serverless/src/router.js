@@ -1,3 +1,4 @@
+import { done } from 'mongoose';
 import { TodoItem, User } from '../models/model';
 
 
@@ -18,6 +19,18 @@ const get = async (event, context, callback) => {
 };
 
 const post = async (event, context, callback) => {
+  const { userID, todoItem } = parseBody(event);
+  const todo = new TodoItem({ ...todoItem });
+  const updatedUser = await User.findOneAndUpdate(
+    { userID },
+    { $push: { todoItems: todo } },
+    { new: true }, // return the modified document rather than the original. defaults to false
+  );
+  if (updatedUser) {
+    updatedUser.save();
+    return response(200, updatedUser);
+  }
+  return response(404, 'User Not Found');
 };
 
 const patch = (event, context, callback) => {
