@@ -1,44 +1,10 @@
-import { done } from 'mongoose';
-import { TodoItem, User } from '../models/model';
+import { getHandler, postHandler } from './handler';
 
 
-const response = (statusCode, responseData) => ({
-  statusCode,
-  body: JSON.stringify(responseData),
-});
-
-const parseBody = (event) => {
-  const { body } = event;
-  return JSON.parse(body);
-};
-
-const get = async (event, context, callback) => {
-  const { userID } = event.pathParameters;
-  const result = await User.find({ userID });
-  return result.length ? response(200, result) : response(404, result);
-};
-
-const post = async (event, context, callback) => {
-  const { userID, todoItem } = parseBody(event);
-  const todo = new TodoItem({ ...todoItem });
-  const updatedUser = await User.findOneAndUpdate(
-    { userID },
-    { $push: { todoItems: todo } },
-    { new: true }, // return the modified document rather than the original. defaults to false
-  );
-  if (updatedUser) {
-    updatedUser.save();
-    return response(200, updatedUser);
-  }
-  return response(404, 'User Not Found');
-};
-
-const patch = (event, context, callback) => {
-};
-
-const remove = (event, context, callback) => {
-
-};
+const get = (event, ctx, callback) => getHandler(event, ctx, callback);
+const post = (event, ctx, callback) => postHandler(event, ctx, callback);
+const patch = (event, ctx, callback) => {};
+const remove = (event, ctx, callback) => {};
 
 
 export {
