@@ -1,5 +1,4 @@
-import mongoose from 'mongoose';
-import Kitten from '../models/kitty';
+import { TodoItem, User } from '../models/model';
 
 
 const response = (statusCode, responseData) => ({
@@ -13,18 +12,15 @@ const parseBody = (event) => {
 };
 
 const get = async (event, context, callback) => {
-  await mongoose.connect('mongodb://todo:xnenrhksflwk@localhost/todo');
-  const doondoon = new Kitten({ name: 'doondoon' });
-  doondoon.save();
-  doondoon.speak();
-
+  const { userID } = event.pathParameters;
+  const result = await User.find({ userID });
+  return response(200, result);
 };
 
 const post = async (event, context, callback) => {
 };
 
 const patch = (event, context, callback) => {
-
 };
 
 const remove = (event, context, callback) => {
