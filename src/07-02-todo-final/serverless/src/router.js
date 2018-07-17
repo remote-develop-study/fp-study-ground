@@ -14,7 +14,7 @@ const parseBody = (event) => {
 const get = async (event, context, callback) => {
   const { userID } = event.pathParameters;
   const result = await User.find({ userID });
-  return response(200, result);
+  return result.length ? response(200, result) : response(404, result);
 };
 
 const post = async (event, context, callback) => {
