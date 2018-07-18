@@ -153,12 +153,6 @@ label[for='toggle-all'] {
   border-bottom: 1px solid #ededed;
 }
 
-.todo-list li:hover .delete{
-  display: block;
-  cursor: pointer;
-}
-
-
 .todo-list li:last-child {
   border-bottom: none;
 }
@@ -251,23 +245,6 @@ label[for='toggle-all'] {
   margin-bottom: -1px;
 }
 
-.todo-list li .delete{
-  display: none;
-  position: absolute;
-  top: 0;
-  right: 10px;
-  bottom: 0;
-  width: 40px;
-  height: 40px;
-  margin: auto 0;
-  color: #cc9a9a;
-  font-size: 30px;
-  margin-bottom: 11px;
-  transition: color 0.2s ease-in-out;
-}
-.todo-list li .delete:after{
-  content:'x';
-}
 .footer {
   color: #777;
   padding: 10px 15px;
@@ -394,9 +371,4 @@ html .clear-completed:active {
   .filters {
     bottom: 10px;
   }
-}
-
-/* ?? */
-input[type="checkbox"]:hover{
-  cursor: pointer;
 }
