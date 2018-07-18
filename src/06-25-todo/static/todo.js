@@ -1,8 +1,9 @@
 var $input_value = document.querySelector(".new-todo").value;
 var $input_todo = document.querySelector(".new-todo");
+var $todo_list = document.querySelector('.todo-list');
 // 로컬스토리지 저장소
 var data = localStorage.data ? JSON.parse(localStorage.data) : [];
-var data_local = JSON.parse(window.localStorage.getItem("data"));
+var data_local = JSON.parse(window.localStorage.getItem("data")) ? null : [];
 // 머지 리퀘 테스트1
 getItem(data);
 //갯수 보기
@@ -14,7 +15,7 @@ function count() {
 
 // 엔터 눌렀을시 저장되게
 function list_add() {
-  $input_todo.addEventListener("keyup", function(e) {
+  $input_todo.addEventListener("keyup", function (e) {
     let x = e.which || e.keyCode;
     if (x == 13) {
       //공백일때
@@ -27,10 +28,6 @@ function list_add() {
         data.push(v);
         // 저장하기
         setItem(data);
-
-        //보여주기
-        // getItem(data);
-
         // 공백으로 만듬
         document.querySelector(".new-todo").value = "";
         $input_todo.value = "";
@@ -62,25 +59,15 @@ function getItem(data) {
   var $ul = document.querySelector(".todo-list");
   var $li = document.createElement("li");
 
-  // jquery 뿌리기
-  // for (var i = 0; i < data.length; i++) {
-  //   var htm = '';
-  //   htm = '<li class="false">' +
-  //     '<input type="checkbox" class="toggle">' +
-  //     '<label>' + data[i] + '</label>' +
-  //     '<button class="delete"></button>' +
-  //     '</li>'
-  //   $('.todo-list').append(htm);
-  // }
-
   // 바닐라js 뿌리기
-  for (var i = 0; i < data_local.length; i++) {
+  var reverse_data = data.reverse();
+  for (var i = 0; i < reverse_data.length; i++) {
     var htm = "";
     htm =
       '<li class="false">' +
       '<input type="checkbox" class="toggle">' +
       "<label>" +
-      data_local[i] +
+      reverse_data[i] +
       "</label>" +
       '<button class="delete"></button>' +
       "</li>";
@@ -89,25 +76,43 @@ function getItem(data) {
   }
   // console.log(data_local);
   document.querySelector(".todo-count").innerHTML =
-    data_local.length + " items left";
+    reverse_data.length + " items left";
 }
 
-//삭제
-// var $delete_btn = document.querySelector('.delete');
-// $delete_btn.addEventListener('click', delete_list)
-// function delete_list() {
-// }
 
-var $mother_chckbox = document.querySelector(".toggle-all");
-//완료
-//.todo-list 에 걸어보기
-document.querySelector(".toggle").addEventListener("click", function(e) {
-  e.target.parentElement.classList.toggle("finished");
-  // this.parentNode.classList.toggle('finished');
-  // this.parentElement.style.display = 'none';
-  // this.parentElement.style.background = 'black';
-  // console.log(this);
+//완료. 삭제
+$todo_list.addEventListener('click', function(e){
+  let el = e.target;
+  console.log(el);
+  // console.log(el.innerHTML);
+  // 삭제
+  if (el.classList.contains('delete')) {
+    console.log('버튼');
+  }
+  // 완료
+  if (el.classList.contains('toggle')) {
+    el.parentNode.classList.toggle('completed');
+    // console.log('토글');
+  }
 });
 
+// 필터링 탭
+document.addEventListener('click', function (e) {
+  let el = e.target.innerHTML;
+  if(el=="Completed"){
+    console.log('완료');
+  }
+  if(el=="Active"){
+    console.log('액티브');
+  }
+  if(el=="All"){
+    console.log('모두')
+  }
+});
+
+function filter_view(){
+  
+}
+
 //전체 완료
-$mother_chckbox.addEventListener("click", function() {});
+// $mother_chckbox.addEventListener("click", function () { });
