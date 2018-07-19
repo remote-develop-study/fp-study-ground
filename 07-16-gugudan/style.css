@@ -1,0 +1,31 @@
+.container {
+  width: max-content;
+  margin: 0px auto;
+  margin-top: 30px;
+  display: table;
+}
+
+.container:after {
+  display: block;
+  content: '';
+  clear: both;
+}
+
+h3 {
+  text-align: center;
+}
+
+.select-dan {
+  display: table-cell;
+  float: left;
+}
+
+wired-listbox {
+  display: table-cell;
+  float: right;
+}
+
+svg {
+  display: block;
+  margin: 0 auto;
+}
