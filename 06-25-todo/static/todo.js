@@ -91,6 +91,7 @@ $todo_list.addEventListener('click', function(e){
   }
   // 완료
   if (el.classList.contains('toggle')) {
+    el.parentNode.classList.toggle('false');
     el.parentNode.classList.toggle('completed');
     // console.log('토글');
   }
@@ -101,12 +102,16 @@ document.addEventListener('click', function (e) {
   let el = e.target.innerHTML;
   if(el=="Completed"){
     console.log('완료');
+    // $todo_list.firstElementChild
   }
   if(el=="Active"){
     console.log('액티브');
   }
   if(el=="All"){
     console.log('모두')
+  }
+  if(el=="clear-completed"){
+    console.log('삭제');
   }
 });
 
