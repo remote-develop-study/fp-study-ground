@@ -83,7 +83,7 @@ function getItem(data) {
 //완료. 삭제
 $todo_list.addEventListener('click', function (e) {
   let el = e.target;
-  console.log(el);
+  console.log(el.html);
   // console.log(el.innerHTML);
   // 삭제
   if (el.classList.contains('delete')) {
