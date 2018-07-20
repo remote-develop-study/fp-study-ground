@@ -81,7 +81,7 @@ function getItem(data) {
 
 
 //완료. 삭제
-$todo_list.addEventListener('click', function(e){
+$todo_list.addEventListener('click', function (e) {
   let el = e.target;
   console.log(el);
   // console.log(el.innerHTML);
@@ -100,23 +100,23 @@ $todo_list.addEventListener('click', function(e){
 // 필터링 탭
 document.addEventListener('click', function (e) {
   let el = e.target.innerHTML;
-  if(el=="Completed"){
+  if (el == "Completed") {
     console.log('완료');
     // $todo_list.firstElementChild
   }
-  if(el=="Active"){
+  if (el == "Active") {
     console.log('액티브');
   }
-  if(el=="All"){
+  if (el == "All") {
     console.log('모두')
   }
-  if(el=="clear-completed"){
+  if (el == "clear-completed") {
     console.log('삭제');
   }
 });
 
-function filter_view(){
-  
+function filter_view() {
+
 }
 
 //전체 완료
