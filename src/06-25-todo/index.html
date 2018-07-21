@@ -52,6 +52,7 @@
         data[id].todo = newValue;
         render();
       }
+
       function del(e) {
         const id = e.target.getAttribute('data-id');
         data.splice(id, 1);
@@ -75,12 +76,14 @@
         $domTemplate.innerHTML = ''
         $domTemplate.innerHTML = data.length === 0 ? '목록이 없습니다.' : HtmlRender(data);
       }
+
       function activeRender() {
         const activeData = data.filter(item => item.done === false);
         $domTemplate = selector('.todo-list');
         $domTemplate.innerHTML = ''
         $domTemplate.innerHTML = HtmlRender(activeData);
       }
+
       function completedRender() {
         const completedData = data.filter(item => item.done !== false);
         $domTemplate = selector('.todo-list');
@@ -90,12 +93,12 @@
 
       function HtmlRender(target) {
         return target.map((item, index) => {
-          const elem = `<button id="done${index}" type="button" data-id="${index}" onclick="isDone(event)">${item.done === false ? 'completed' : 'todo'}</button>
+          const elemAll = `<button id="done${index}" type="button" data-id="${index}" onclick="isDone(event)">${item.done === false ? 'completed' : 'todo'}</button>
           <button type="button" data-id="${index}" onclick="updateTodo(event)">수정</button>
           <button type="button" data-id="${index}" onclick="del(event)">삭제</button>`
           return `<p>
             <input id="todo${index}" value="${item.todo}" data-id="${index}">
-            ${target === data ? elem : ''}
+            ${target === data ? elemAll : ''}
           </p>`;
         })
       }

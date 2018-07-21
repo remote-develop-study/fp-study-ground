@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <p>font color change sample</p>
+  <p>font color change sample2</p>
+  <label>
+    <select>
+      <option>색상을 먼저 선택하고 돔을 클릭해주세요</option>
+      <option value="red">red</option>
+      <option value="black">black</option>
+      <option value="white">white</option>
+    </select>
+  </label>
+  <script>
+      document.addEventListener('click', function(e) {
+        e.toElement.style.color = fontColorChange();
+      });
+
+      function fontColorChange() {
+        const select = document.querySelector('select');
+        return select.options[select.selectedIndex].text;        
+      }
+  </script>
+</body>
+</html>

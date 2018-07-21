@@ -83,4 +83,4 @@ import state from './state.js'
     bindDOMEvents()
     addPropertyReactiveness()
     state.todos = localStorage._todos ? JSON.parse(localStorage._todos) : []
-})()
+})();
