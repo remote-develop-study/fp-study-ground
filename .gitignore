@@ -1,3 +1,4 @@
+
 # Created by https://www.gitignore.io/api/node,intellij,visualstudiocode
 
 
@@ -140,3 +141,7 @@ typings/
 
 
 # End of https://www.gitignore.io/api/node,intellij,visualstudiocode
+.vscode
+.idea
+.DS_Store
+node_modules
