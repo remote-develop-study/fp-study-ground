@@ -1,0 +1,57 @@
+[
+  {
+    "userID": "QWERTY",
+    "todoItems": [
+      {
+        "id": 1,
+        "whatTodo": "Shopping",
+        "completed": false
+      },
+      {
+        "id": 2,
+        "whatTodo": "Take for a walk",
+        "completed": false
+      },
+      {
+        "id": 3,
+        "whatTodo": "Take a break",
+        "completed": false
+      },
+      {
+        "id": 4,
+        "whatTodo": "Breathing",
+        "completed": false
+      },
+      {
+        "id": 5,
+        "whatTodo": "Work out",
+        "completed": false
+      },
+      {
+        "id": 6,
+        "whatTodo": "Watch a movie",
+        "completed": false
+      },
+      {
+        "id": 7,
+        "whatTodo": "Coffee break",
+        "completed": false
+      },
+      {
+        "id": 8,
+        "whatTodo": "Meet a friend",
+        "completed": false
+      },
+      {
+        "id": 9,
+        "whatTodo": "Pay my taxes",
+        "completed": false
+      },
+      {
+        "id": 10,
+        "whatTodo": "Call mom",
+        "completed": false
+      }
+    ]
+  }
+]
