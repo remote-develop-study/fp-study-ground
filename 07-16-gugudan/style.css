@@ -1,31 +1,34 @@
 .container {
-  width: max-content;
-  margin: 0px auto;
-  margin-top: 30px;
-  display: table;
+	width: max-content;
+	margin: 0px auto;
+	margin-top: 30px;
+	display: table;
 }
 
 .container:after {
-  display: block;
-  content: '';
-  clear: both;
+	display: block;
+	content: '';
+	clear: both;
 }
 
 h3 {
-  text-align: center;
+	text-align: center;
 }
 
 .select-dan {
-  display: table-cell;
-  float: left;
+	display: table-cell;
+	float: left;
 }
 
 wired-listbox {
-  display: table-cell;
-  float: right;
+	display: table-cell;
+	float: right;
+}
+wired-item {
+	width: 100px;
 }
 
 svg {
-  display: block;
-  margin: 0 auto;
+	display: block;
+	margin: 0 auto;
 }
