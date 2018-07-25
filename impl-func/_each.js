@@ -1,4 +1,19 @@
 // each기능을 구현
+
+function iterator(arr){
+  var nextIndex = 0;
+  return {
+     next: function(){
+         return nextIndex < array.length ?
+             {value: array[nextIndex++], done: false} :
+             {done: true};
+     }
+  }
+}
+
+
+
+
  function each (collection, iterator) {
   if (Array.isArray(collection)) {
     for (var i = 0; i < collection.length; i++) {
