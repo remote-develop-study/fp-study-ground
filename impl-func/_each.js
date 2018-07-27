@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 // each기능을 구현
 
 function iterator(arr){
@@ -25,3 +26,10 @@ function iterator(arr){
     }
   }
 };
+=======
+
+// each기능을 구현
+function _each(){
+  
+}
+>>>>>>> Stashed changes
